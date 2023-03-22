@@ -119,7 +119,7 @@ namespace InfinityPaint
         {
             stMensagem.Items[3].Text = "x: " + e.X + ", y: " + e.Y;
 
-            if (esperaFimReta || esperaFimCirculo)
+            if (esperaFimReta || esperaFimCirculo || esperaFimElipse)
             {
                 p2.X = e.X;
                 p2.Y = e.Y;
@@ -163,6 +163,16 @@ namespace InfinityPaint
 
                 g.DrawEllipse(pen, p1.X - raio, p1.Y - raio, // centro - raio
                               2 * raio, 2 * raio);
+            }
+            else if (esperaFimElipse)
+            {
+                Pen pen = new Pen(p1.Cor);
+
+                int raio1 = Math.Abs(p1.X - p2.X);
+                int raio2 = Math.Abs(p1.Y - p2.Y);
+
+                g.DrawEllipse(pen, p1.X - raio1, p1.Y - raio2, // centro - raio
+                              2 * raio1, 2 * raio2);
             }
         }
 
@@ -210,6 +220,23 @@ namespace InfinityPaint
                 figuras.InserirAposFim(new NoLista<Ponto>(novoCirculo, null));
                 novoCirculo.desenhar(novoCirculo.Cor, pbAreaDesenho.CreateGraphics());
             }
+            else if (esperaInicioElipse)
+            {
+                p1.Cor = corAtual;
+                p1.X = e.X;
+                p1.Y = e.Y;
+                esperaInicioElipse = false;
+                esperaFimElipse = true;
+                stMensagem.Items[1].Text = "Mensagem: clique o ponto final da elipse";
+            }
+            else if (esperaFimElipse)
+            {
+                esperaInicioElipse = false;
+                esperaFimElipse = false;
+                Elipse novaElipse = new Elipse(p1.X, p1.Y, Math.Abs(e.X - p1.X), Math.Abs(e.Y - p1.Y), p1.Cor);
+                figuras.InserirAposFim(new NoLista<Ponto>(novaElipse, null));
+                novaElipse.desenhar(novaElipse.Cor, pbAreaDesenho.CreateGraphics());
+            }
         }
 
         private void btnReta_Click(object sender, EventArgs e)
@@ -228,7 +255,9 @@ namespace InfinityPaint
 
         private void btnElipse_Click(object sender, EventArgs e)
         {
-
+            stMensagem.Items[1].Text = "Clique no local do ponto inicial da elipse:";
+            limparEsperas();
+            esperaInicioElipse = true;
         }
     }
 }
