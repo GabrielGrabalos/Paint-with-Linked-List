@@ -30,4 +30,32 @@ class Ponto : IComparable<Ponto>
             return Y - other.Y;
         return diferencaX;
     }
+
+    public String transformaString(int valor, int quantasPosicoes)
+    {
+        String cadeia = valor + "";
+        //while (cadeia.Length < quantasPosicoes) cadeia = "0" + cadeia;
+        cadeia = cadeia.PadLeft(quantasPosicoes, '0');
+
+        return cadeia[..quantasPosicoes]; // corta, se necessário, para
+                                                     // tamanho máximo
+    }
+    public String transformaString(String valor, int quantasPosicoes)
+    {
+        String cadeia = valor + "";
+        //while (cadeia.Length < quantasPosicoes) cadeia += " ";
+        cadeia = cadeia.PadRight(quantasPosicoes, ' ');
+
+        return cadeia[..quantasPosicoes]; // corta, se necessário, para
+                                                     // tamanho máximo
+    }
+    public override String ToString()
+    {
+        return transformaString("p", 5)   +
+               transformaString(X, 5)     +
+               transformaString(Y, 5)     +
+               transformaString(Cor.R, 5) +
+               transformaString(Cor.G, 5) +
+               transformaString(Cor.B, 5);
+    }
 }

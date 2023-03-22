@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 public class ListaSimples<Dado> where Dado : IComparable<Dado>
     //ICriterioDeSeparacao, IRegistro
@@ -245,7 +246,7 @@ public class ListaSimples<Dado> where Dado : IComparable<Dado>
         atual = primeiro;
         while (atual != null)
         {
-            arquivo.WriteLine(atual.Info.FormatoDeRegistro());
+            arquivo.WriteLine(atual.Info.ToString());
             atual = atual.Prox;
         }
         arquivo.Close(); 
@@ -276,7 +277,7 @@ public class ListaSimples<Dado> where Dado : IComparable<Dado>
 
     // exercício 2
 
-    public void Separar(ref ListaSimples<Dado> l1, ref ListaSimples<Dado> l2)
+    /*public void Separar(ref ListaSimples<Dado> l1, ref ListaSimples<Dado> l2)
     {
         l1 = new ListaSimples<Dado>();
         l2 = new ListaSimples<Dado>();
@@ -292,7 +293,7 @@ public class ListaSimples<Dado> where Dado : IComparable<Dado>
         }
         this.primeiro = this.ultimo = null;
         this.quantosNos = 0;
-    }
+    }*/
 
     // exercício 3
     public ListaSimples<Dado> Juntar(ListaSimples<Dado> outra)
@@ -372,6 +373,19 @@ public class ListaSimples<Dado> where Dado : IComparable<Dado>
             primeiro.Prox = null;
             primeiro = um;
         }
+    }
+
+    public void iniciarPercursoSequencial()
+    {
+        atual = primeiro;
+    }
+    public bool podePercorrer()
+    {
+        if (atual == primeiro && atual != null) return true;
+
+        atual = atual.Prox;
+
+        return (atual != null);
     }
 }
 

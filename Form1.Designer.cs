@@ -71,6 +71,7 @@
             this.pbAreaDesenho.Size = new System.Drawing.Size(802, 378);
             this.pbAreaDesenho.TabIndex = 0;
             this.pbAreaDesenho.TabStop = false;
+            this.pbAreaDesenho.Paint += new System.Windows.Forms.PaintEventHandler(this.pbAreaDesenho_Paint);
             this.pbAreaDesenho.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbAreaDesenho_MouseMove);
             // 
             // toolStrip1
