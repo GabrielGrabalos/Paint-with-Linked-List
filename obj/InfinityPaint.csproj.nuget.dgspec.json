@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\u22131\\source\\repos\\InfinityPaint\\InfinityPaint.csproj": {}
+    "C:\\Users\\u22131\\Source\\Repos\\GabrielGrabalos\\Paint-com-Lista-Ligada\\InfinityPaint.csproj": {}
   },
   "projects": {
-    "C:\\Users\\u22131\\source\\repos\\InfinityPaint\\InfinityPaint.csproj": {
+    "C:\\Users\\u22131\\Source\\Repos\\GabrielGrabalos\\Paint-com-Lista-Ligada\\InfinityPaint.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\u22131\\source\\repos\\InfinityPaint\\InfinityPaint.csproj",
+        "projectUniqueName": "C:\\Users\\u22131\\Source\\Repos\\GabrielGrabalos\\Paint-com-Lista-Ligada\\InfinityPaint.csproj",
         "projectName": "InfinityPaint",
-        "projectPath": "C:\\Users\\u22131\\source\\repos\\InfinityPaint\\InfinityPaint.csproj",
+        "projectPath": "C:\\Users\\u22131\\Source\\Repos\\GabrielGrabalos\\Paint-com-Lista-Ligada\\InfinityPaint.csproj",
         "packagesPath": "C:\\Users\\u22131\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\u22131\\source\\repos\\InfinityPaint\\obj\\",
+        "outputPath": "C:\\Users\\u22131\\Source\\Repos\\GabrielGrabalos\\Paint-com-Lista-Ligada\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -55,24 +55,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[6.0.15, 6.0.15]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[6.0.15, 6.0.15]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[6.0.15, 6.0.15]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[6.0.15, 6.0.15]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
@@ -81,7 +63,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.104\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

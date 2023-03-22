@@ -47,6 +47,7 @@
             this.displayDeCor = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.btnSair = new System.Windows.Forms.ToolStripButton();
             this.stMensagem = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -66,11 +67,13 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pbAreaDesenho.BackColor = System.Drawing.Color.White;
-            this.pbAreaDesenho.Location = new System.Drawing.Point(-2, 47);
+            this.pbAreaDesenho.Location = new System.Drawing.Point(0, 47);
             this.pbAreaDesenho.Name = "pbAreaDesenho";
-            this.pbAreaDesenho.Size = new System.Drawing.Size(802, 378);
+            this.pbAreaDesenho.Size = new System.Drawing.Size(800, 378);
             this.pbAreaDesenho.TabIndex = 0;
             this.pbAreaDesenho.TabStop = false;
+            this.pbAreaDesenho.Paint += new System.Windows.Forms.PaintEventHandler(this.pbAreaDesenho_Paint);
+            this.pbAreaDesenho.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbAreaDesenho_MouseClick);
             this.pbAreaDesenho.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbAreaDesenho_MouseMove);
             // 
             // toolStrip1
@@ -93,6 +96,7 @@
             this.displayDeCor,
             this.toolStripButton2,
             this.toolStripSeparator3,
+            this.toolStripButton4,
             this.btnSair});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -138,9 +142,10 @@
             this.btnReta.Image = ((System.Drawing.Image)(resources.GetObject("btnReta.Image")));
             this.btnReta.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnReta.Name = "btnReta";
-            this.btnReta.Size = new System.Drawing.Size(40, 41);
-            this.btnReta.Text = "Linha";
+            this.btnReta.Size = new System.Drawing.Size(34, 41);
+            this.btnReta.Text = "Reta";
             this.btnReta.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnReta.Click += new System.EventHandler(this.btnReta_Click);
             // 
             // btnCirculo
             // 
@@ -150,6 +155,7 @@
             this.btnCirculo.Size = new System.Drawing.Size(49, 41);
             this.btnCirculo.Text = "Círculo";
             this.btnCirculo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnCirculo.Click += new System.EventHandler(this.btnCirculo_Click);
             // 
             // btnElipse
             // 
@@ -159,6 +165,7 @@
             this.btnElipse.Size = new System.Drawing.Size(41, 41);
             this.btnElipse.Text = "Elipse";
             this.btnElipse.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnElipse.Click += new System.EventHandler(this.btnElipse_Click);
             // 
             // btnRetangulo
             // 
@@ -238,6 +245,16 @@
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 44);
+            // 
+            // toolStripButton4
+            // 
+            this.toolStripButton4.AutoSize = false;
+            this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
+            this.toolStripButton4.Enabled = false;
+            this.toolStripButton4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton4.Image")));
+            this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton4.Name = "toolStripButton4";
+            this.toolStripButton4.Size = new System.Drawing.Size(8, 41);
             // 
             // btnSair
             // 
@@ -348,5 +365,6 @@
         private ToolStripStatusLabel toolStripStatusLabel2;
         private ToolStripStatusLabel toolStripStatusLabel3;
         private ToolStripStatusLabel toolStripStatusLabel4;
+        private ToolStripButton toolStripButton4;
     }
 }

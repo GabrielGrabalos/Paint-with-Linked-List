@@ -21,7 +21,7 @@ class Circulo : Ponto
         raio = novoRaio;
     }
 
-    public void desenhar(Color corDesenho, Graphics g)
+    public override void desenhar(Color corDesenho, Graphics g)
     {
         Pen pen = new Pen(corDesenho);
         g.DrawEllipse(pen,base.X - raio, base.Y - raio, // centro - raio
