@@ -1,10 +1,12 @@
 using System.Drawing;
+using System.Drawing.Text;
 using static System.Windows.Forms.LinkLabel;
 
 namespace InfinityPaint
 {
     public partial class frmGrafico : Form
     {
+        // Variáveis de controle
         bool esperaPonto = false;
         bool esperaInicioReta = false;
         bool esperaFimReta = false;
@@ -20,6 +22,8 @@ namespace InfinityPaint
 
         private ListaSimples<Ponto> figuras = new ListaSimples<Ponto>();
         Color corAtual = Color.Black;
+
+        // Pontos auxiliares:
         private static Ponto p1 = new Ponto(0, 0, Color.Black, 1);
         private static Ponto p2 = new Ponto(0, 0, Color.Black, 1); // Ponto temporário.
 
@@ -37,34 +41,396 @@ namespace InfinityPaint
             polilinha = false;
         }
 
+        // Tratadores de evento:
+
         public frmGrafico()
         {
             InitializeComponent();
             pbAreaDesenho.KeyPress += new KeyPressEventHandler(pbAreaDesenho_KeyPress);
         }
 
-        private void btnSair_Click(object sender, EventArgs e)
+        // Eventos click (em ordem):
+
+        private void btnAbrir_Click(object sender, EventArgs e)
         {
-            if(MessageBox.Show("Deseja realmente sair?", "Sair", 
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-            {
-                Application.Exit();
-            }
+            if (dlgAbrir.ShowDialog() == DialogResult.OK)
+                LerArquivo();
+        }
+
+        private void btnSalvar_Click(object sender, EventArgs e)
+        {
+            SalvarArquivo();
+        }
+
+        private void btnPonto_Click(object sender, EventArgs e)
+        {
+            limparEsperas();
+
+            esperaPonto = true;
+
+            stMensagem.Items[1].Text = "Clique no local do ponto desejado:";
+        }
+
+        private void btnReta_Click(object sender, EventArgs e)
+        {
+            limparEsperas();
+
+            esperaInicioReta = true;
+
+            stMensagem.Items[1].Text = "Clique no local do ponto inicial da reta:";
+        }
+
+        private void btnCirculo_Click(object sender, EventArgs e)
+        {
+            limparEsperas();
+
+            esperaInicioCirculo = true;
+
+            stMensagem.Items[1].Text = "Clique no local do ponto inicial do círculo:";
+        }
+
+        private void btnElipse_Click(object sender, EventArgs e)
+        {
+            limparEsperas();
+
+            esperaInicioElipse = true;
+
+            stMensagem.Items[1].Text = "Clique no local do ponto inicial da elipse:";
+        }
+
+        private void btnRetangulo_Click(object sender, EventArgs e)
+        {
+            limparEsperas();
+
+            esperaInicioRetangulo = true;
+
+            stMensagem.Items[1].Text = "Clique no local do ponto inicial do retângulo:";
+        }
+
+        private void btnPolilinha_Click(object sender, EventArgs e)
+        {
+            limparEsperas();
+
+            polilinha = true;
+            esperaInicioReta = true;
+
+            stMensagem.Items[1].Text = "Clique no local do ponto inicial das retas:";
         }
 
         private void btnCor_Click(object sender, EventArgs e)
         {
-            if(cdSeletorDeCor.ShowDialog() == DialogResult.OK)
+            if (cdSeletorDeCor.ShowDialog() == DialogResult.OK)
             {
                 corAtual = cdSeletorDeCor.Color;
                 displayDeCor.BackColor = corAtual;
             }
         }
 
-        private void btnAbrir_Click(object sender, EventArgs e)
+        private void btnAumentarEspessura_Click(object sender, EventArgs e)
         {
-            if (dlgAbrir.ShowDialog() == DialogResult.OK)
-                LerArquivo();
+            espessura++;
+
+            if (espessura == 10)
+            {
+                btnAumentarEspessura.Enabled = false;
+            }
+            else if (!btnDiminuirEspessura.Enabled)
+            {
+                btnDiminuirEspessura.Enabled = true;
+            }
+
+            tbEspessura.Text = "Espessura: " + espessura;
+        }
+
+        private void btnDiminuirEspessura_Click(object sender, EventArgs e)
+        {
+            espessura--;
+
+            if (espessura == 1)
+            {
+                btnDiminuirEspessura.Enabled = false;
+            }
+            else if (!btnAumentarEspessura.Enabled)
+            {
+                btnAumentarEspessura.Enabled = true;
+            }
+
+            tbEspessura.Text = "Espessura: " + espessura;
+        }
+
+        private void btnSair_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Deseja realmente sair?", "Sair",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
+        }
+
+        // Eventos mouse (pbAreaDesenhos):
+
+        private void pbAreaDesenho_MouseMove(object sender, MouseEventArgs e)
+        {
+            AtualizarP2(e.X, e.Y);
+
+            stMensagem.Items[3].Text = "x: " + e.X + ", y: " + e.Y;
+        }
+
+        private void pbAreaDesenho_Paint(object sender, PaintEventArgs e)
+        {
+            DesenharFiguras(e.Graphics); // acessa contexto gráfico e desenha
+        }
+
+        private void pbAreaDesenho_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (esperaPonto)
+            {
+                EsperaPonto();
+            }
+            else if (esperaInicioReta)
+            {
+                EsperaInicioReta();
+            }
+            else if (esperaFimReta)
+            {
+                EsperaFimReta();
+            }
+            else if (esperaInicioCirculo)
+            {
+                EsperaInicioCirculo();
+            }
+            else if (esperaFimCirculo)
+            {
+                EsperaFimCirculo();
+            }
+            else if (esperaInicioElipse)
+            {
+                EsperaInicioElipse();
+            }
+            else if (esperaFimElipse)
+            {
+                EsperaFimElipse();
+            }
+            else if (esperaInicioRetangulo)
+            {
+                EsperaInicioRetangulo();
+            }
+            else if (esperaFimRetangulo)
+            {
+                EsperaFimRetangulo();
+            }
+        }
+
+        private void pbAreaDesenho_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (polilinha)
+            {
+                polilinha     = false;
+                esperaFimReta = false;
+            }
+        }
+
+        private void pbAreaDesenho_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (polilinha && (Keys)e.KeyChar == Keys.Enter)
+            {
+                polilinha = false;
+            }
+        }
+
+        
+    
+        // Funções:
+
+        private void SalvarArquivo()
+        {
+            SaveFileDialog salvar = new SaveFileDialog();
+
+            salvar.Filter = "Arquivo de desenho (*.txt)|*.txt";
+            salvar.Title  = "Salvar desenho";
+
+            salvar.ShowDialog();
+
+            if (salvar.FileName != "")
+            {
+                FileStream   arquivo  = new FileStream(salvar.FileName, FileMode.Create);
+                StreamWriter escritor = new StreamWriter(arquivo);
+
+                int xSupDir = 0;
+                int ySupDir = 0;
+                int xInfEsq = this.Width;
+                int yInfEsq = this.Height;
+
+                Ponto aux = new Ponto(1, 1, Color.Black, 1);
+
+                escritor.Write(aux.transformaString(xInfEsq, 5));
+                escritor.Write(aux.transformaString(yInfEsq, 5));
+                escritor.Write(aux.transformaString(xSupDir, 5));
+                escritor.Write(aux.transformaString(ySupDir, 5));
+                escritor.WriteLine();
+
+                figuras.iniciarPercursoSequencial();
+
+                while (figuras.podePercorrer())
+                {
+                    escritor.WriteLine(figuras.Atual.Info.ToString());
+                }
+
+                escritor.Close();
+                arquivo.Close();
+            }
+        }
+
+        private void EsperaPonto()
+        {
+            Ponto novoPonto = new Ponto(p2.X, p2.Y, corAtual, espessura);
+            figuras.InserirAposFim(new NoLista<Ponto>(novoPonto, null));
+            novoPonto.desenhar(novoPonto.Cor, pbAreaDesenho.CreateGraphics());
+            esperaPonto = false;
+            stMensagem.Items[1].Text = "";
+        }
+
+        private void EsperaInicioReta()
+        {
+            p1.Cor = corAtual;
+            p1.X = p2.X;
+            p1.Y = p2.Y;
+            esperaInicioReta = false;
+            esperaFimReta = true;
+            stMensagem.Items[1].Text = "Mensagem: clique o ponto final da reta";
+        }
+
+        private void EsperaFimReta()
+        {
+            esperaInicioReta = false;
+
+            if (polilinha)
+            {
+                p1.X = p2.X;
+                p1.Y = p2.Y;
+            }
+            else
+            {
+                esperaFimReta = false;
+            }
+
+            Reta novaLinha = new Reta(p1.X, p1.Y, p2.X, p2.Y, corAtual, espessura);
+
+            figuras.InserirAposFim(new NoLista<Ponto>(novaLinha, null));
+            novaLinha.desenhar(novaLinha.Cor, pbAreaDesenho.CreateGraphics());
+        }
+
+        private void EsperaInicioCirculo()
+        {
+            esperaInicioCirculo = false;
+            esperaFimCirculo    = true;
+
+            p1.X = p2.X;
+            p1.Y = p2.Y;
+            p1.Cor = corAtual;
+            
+            stMensagem.Items[1].Text = "Mensagem: clique o ponto final do círculo";
+        }
+        private void EsperaFimCirculo()
+        {
+            esperaInicioCirculo = false;
+            esperaFimCirculo    = false;
+
+            int raio = Math.Max(Math.Abs(p1.X - p2.X), Math.Abs(p1.Y - p2.Y));
+
+            Circulo novoCirculo = new Circulo(p1.X, p1.Y, raio, p1.Cor, espessura);
+
+            figuras.InserirAposFim(new NoLista<Ponto>(novoCirculo, null));
+
+            novoCirculo.desenhar(novoCirculo.Cor, pbAreaDesenho.CreateGraphics());
+        }
+
+        private void EsperaInicioElipse()
+        {
+            esperaInicioElipse = false;
+            esperaFimElipse    = true;
+
+            p1.X = p2.X;
+            p1.Y = p2.Y;
+            p1.Cor = corAtual;
+            
+            stMensagem.Items[1].Text = "Mensagem: clique o ponto final da elipse";
+        }
+
+        private void EsperaFimElipse()
+        {
+            esperaInicioElipse = false;
+            esperaFimElipse    = false;
+
+            int raio1 = Math.Abs(p2.X - p1.X);
+            int raio2 = Math.Abs(p2.Y - p1.Y);
+
+            Elipse novaElipse = new Elipse(p1.X, p1.Y, raio1, raio2, p1.Cor, espessura);
+
+            figuras.InserirAposFim(new NoLista<Ponto>(novaElipse, null));
+
+            novaElipse.desenhar(novaElipse.Cor, pbAreaDesenho.CreateGraphics());
+        }
+
+        private void EsperaInicioRetangulo()
+        {
+            esperaInicioRetangulo = false;
+            esperaFimRetangulo    = true;
+
+            p1.X = p2.X;
+            p1.Y = p2.Y;
+            p1.Cor = corAtual;
+
+            stMensagem.Items[1].Text = "Mensagem: clique o ponto final do retângulo";
+        }
+
+        private void EsperaFimRetangulo()
+        {
+            esperaInicioRetangulo = false;
+            esperaFimRetangulo    = false;
+
+            int largura = Math.Abs(p2.X - p1.X);
+            int altura  = Math.Abs(p2.Y - p1.Y);
+
+            int x1, y1;
+
+            if (p1.X < p2.X && p1.Y < p2.Y)
+            {
+                x1 = p1.X;
+                y1 = p1.Y;
+            }
+            else if (p1.X > p2.X && p1.Y < p2.Y)
+            {
+                x1 = p2.X;
+                y1 = p1.Y;
+            }
+            else if (p1.X < p2.X && p1.Y > p2.Y)
+            {
+                x1 = p1.X;
+                y1 = p2.Y;
+            }
+            else
+            {
+                x1 = p2.X;
+                y1 = p2.Y;
+            }
+
+            Retangulo novoRetangulo = new Retangulo(x1, y1, largura, altura, p1.Cor, espessura);
+
+            figuras.InserirAposFim(new NoLista<Ponto>(novoRetangulo, null));
+
+            novoRetangulo.desenhar(novoRetangulo.Cor, pbAreaDesenho.CreateGraphics());
+        }
+
+        private void AtualizarP2(int mouseX, int mouseY)
+        {
+            if (esperaFimReta || esperaFimCirculo || esperaFimElipse || esperaFimRetangulo)
+            {
+                p2.X = mouseX;
+                p2.Y = mouseY;
+
+                pbAreaDesenho.Invalidate();
+            }
         }
 
         private void LerArquivo()
@@ -84,11 +450,11 @@ namespace InfinityPaint
                 {
                     String tipo = linha.Substring(0, 5).Trim();
 
-                    int xBase = Convert.ToInt32(linha.Substring( 5, 5).Trim());
+                    int xBase = Convert.ToInt32(linha.Substring(5, 5).Trim());
                     int yBase = Convert.ToInt32(linha.Substring(10, 5).Trim());
-                    int corR  = Convert.ToInt32(linha.Substring(15, 5).Trim());
-                    int corG  = Convert.ToInt32(linha.Substring(20, 5).Trim());
-                    int corB  = Convert.ToInt32(linha.Substring(25, 5).Trim());
+                    int corR = Convert.ToInt32(linha.Substring(15, 5).Trim());
+                    int corG = Convert.ToInt32(linha.Substring(20, 5).Trim());
+                    int corB = Convert.ToInt32(linha.Substring(25, 5).Trim());
 
                     int esp;
 
@@ -96,7 +462,7 @@ namespace InfinityPaint
                     {
                         esp = Convert.ToInt32(linha.Substring(40, 5).Trim());
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         esp = 1;
                     }
@@ -155,31 +521,6 @@ namespace InfinityPaint
             }
         }
 
-        private void pbAreaDesenho_MouseMove(object sender, MouseEventArgs e)
-        {
-            stMensagem.Items[3].Text = "x: " + e.X + ", y: " + e.Y;
-
-            if (esperaFimReta || esperaFimCirculo || esperaFimElipse || esperaFimRetangulo)
-            {
-                p2.X = e.X;
-                p2.Y = e.Y;
-
-                pbAreaDesenho.Invalidate();
-            }
-        }
-
-        private void btnPonto_Click(object sender, EventArgs e)
-        {
-            stMensagem.Items[1].Text = "Clique no local do ponto desejado:";
-            limparEsperas();
-            esperaPonto = true;
-        }
-
-        private void pbAreaDesenho_Paint(object sender, PaintEventArgs e)
-        {
-            DesenharFiguras(e.Graphics); // acessa contexto gráfico e desenha
-        }
-
         private void DesenharFiguras(Graphics g)
         {
             figuras.iniciarPercursoSequencial();
@@ -206,7 +547,7 @@ namespace InfinityPaint
             }
             else if (esperaFimElipse)
             {
-                Pen pen = new Pen(p1.Cor, espessura);
+                Pen pen = new Pen(p1.Cor);
 
                 int raio1 = Math.Abs(p1.X - p2.X);
                 int raio2 = Math.Abs(p1.Y - p2.Y);
@@ -221,10 +562,8 @@ namespace InfinityPaint
                 int largura = Math.Abs(p2.X - p1.X);
                 int altura = Math.Abs(p2.Y - p1.Y);
 
-                
-
                 //g.DrawRectangle(pen, p1.X, p1.Y, largura, altura);
-                if(p1.X < p2.X && p1.Y < p2.Y)
+                if (p1.X < p2.X && p1.Y < p2.Y)
                     g.DrawRectangle(pen, p1.X, p1.Y, largura, altura);
                 else if (p1.X > p2.X && p1.Y < p2.Y)
                     g.DrawRectangle(pen, p2.X, p1.Y, largura, altura);
@@ -233,231 +572,6 @@ namespace InfinityPaint
                 else if (p1.X > p2.X && p1.Y > p2.Y)
                     g.DrawRectangle(pen, p2.X, p2.Y, largura, altura);
             }
-        }
-
-        private void pbAreaDesenho_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (esperaPonto)
-            {
-                Ponto novoPonto = new Ponto(e.X, e.Y, corAtual, espessura);
-                figuras.InserirAposFim(new NoLista<Ponto>(novoPonto, null));
-                novoPonto.desenhar(novoPonto.Cor, pbAreaDesenho.CreateGraphics());
-                esperaPonto = false;
-                stMensagem.Items[1].Text = "";
-            }
-            else if (esperaInicioReta)
-            {
-                p1.Cor = corAtual;
-                p1.X = e.X;
-                p1.Y = e.Y;
-                esperaInicioReta = false;
-                esperaFimReta = true;
-                stMensagem.Items[1].Text = "Mensagem: clique o ponto final da reta";
-            }
-            else if (esperaFimReta)
-            {
-                Reta novaLinha = new Reta(p1.X, p1.Y, e.X, e.Y, corAtual, espessura);
-
-                figuras.InserirAposFim(new NoLista<Ponto>(novaLinha, null));
-                novaLinha.desenhar(novaLinha.Cor, pbAreaDesenho.CreateGraphics());
-
-                esperaInicioReta = false;
-
-                if (!polilinha)
-                    esperaFimReta = false;
-                else
-                {
-                    p1.X = e.X;
-                    p1.Y = e.Y;
-                }
-            }
-            else if (esperaInicioCirculo)
-            {
-                p1.Cor = corAtual;
-                p1.X = e.X;
-                p1.Y = e.Y;
-                esperaInicioCirculo = false;
-                esperaFimCirculo = true;
-                stMensagem.Items[1].Text = "Mensagem: clique o ponto final do círculo";
-            }
-            else if (esperaFimCirculo)
-            {
-                esperaInicioCirculo = false;
-                esperaFimCirculo = false;
-
-                int raio = Math.Max(Math.Abs(p1.X - p2.X), Math.Abs(p1.Y - p2.Y));
-
-                Circulo novoCirculo = new Circulo(p1.X, p1.Y, raio, p1.Cor, espessura);
-
-                figuras.InserirAposFim(new NoLista<Ponto>(novoCirculo, null));
-                novoCirculo.desenhar(novoCirculo.Cor, pbAreaDesenho.CreateGraphics());
-            }
-            else if (esperaInicioElipse)
-            {
-                p1.Cor = corAtual;
-                p1.X = e.X;
-                p1.Y = e.Y;
-                esperaInicioElipse = false;
-                esperaFimElipse = true;
-                stMensagem.Items[1].Text = "Mensagem: clique o ponto final da elipse";
-            }
-            else if (esperaFimElipse)
-            {
-                esperaInicioElipse = false;
-                esperaFimElipse = false;
-                Elipse novaElipse = new Elipse(p1.X, p1.Y, Math.Abs(e.X - p1.X), Math.Abs(e.Y - p1.Y), p1.Cor, espessura);
-                figuras.InserirAposFim(new NoLista<Ponto>(novaElipse, null));
-                novaElipse.desenhar(novaElipse.Cor, pbAreaDesenho.CreateGraphics());
-            }
-            else if (esperaInicioRetangulo)
-            {
-                p1.Cor = corAtual;
-                p1.X = e.X;
-                p1.Y = e.Y;
-                esperaInicioRetangulo = false;
-                esperaFimRetangulo = true;
-                stMensagem.Items[1].Text = "Mensagem: clique o ponto final do retângulo";
-            }
-            else if (esperaFimRetangulo)
-            {
-                esperaInicioRetangulo = false;
-                esperaFimRetangulo = false;
-
-                Retangulo novoRetangulo;
-
-                if (p1.X < e.X && p1.Y < e.Y)
-                    novoRetangulo = new Retangulo(p1.X, p1.Y, Math.Abs(e.X - p1.X), Math.Abs(e.Y - p1.Y), p1.Cor, espessura);
-                else if (p1.X > e.X && p1.Y < e.Y)
-                    novoRetangulo = new Retangulo(e.X, p1.Y, Math.Abs(e.X - p1.X), Math.Abs(e.Y - p1.Y), p1.Cor, espessura);
-                else if (p1.X < e.X && p1.Y > e.Y)
-                    novoRetangulo = new Retangulo(p1.X, e.Y, Math.Abs(e.X - p1.X), Math.Abs(e.Y - p1.Y), p1.Cor, espessura);
-                else
-                    novoRetangulo = new Retangulo(e.X, e.Y, Math.Abs(e.X - p1.X), Math.Abs(e.Y - p1.Y), p1.Cor, espessura);
-
-                figuras.InserirAposFim(new NoLista<Ponto>(novoRetangulo, null));
-                novoRetangulo.desenhar(novoRetangulo.Cor, pbAreaDesenho.CreateGraphics());
-            }
-        }
-
-        private void btnReta_Click(object sender, EventArgs e)
-        {
-            stMensagem.Items[1].Text = "Clique no local do ponto inicial da reta:";
-            limparEsperas();
-            esperaInicioReta = true;
-        }
-
-        private void btnCirculo_Click(object sender, EventArgs e)
-        {
-            stMensagem.Items[1].Text = "Clique no local do ponto inicial do círculo:";
-            limparEsperas();
-            esperaInicioCirculo = true;
-        }
-
-        private void btnElipse_Click(object sender, EventArgs e)
-        {
-            stMensagem.Items[1].Text = "Clique no local do ponto inicial da elipse:";
-            limparEsperas();
-            esperaInicioElipse = true;
-        }
-
-        private void btnRetangulo_Click(object sender, EventArgs e)
-        {
-            stMensagem.Items[1].Text = "Clique no local do ponto inicial do retângulo:";
-            limparEsperas();
-            esperaInicioRetangulo = true;
-        }
-
-        private void btnPolilinha_Click(object sender, EventArgs e)
-        {
-            stMensagem.Items[1].Text = "Clique no local do ponto inicial das retas:";
-            limparEsperas();
-            polilinha = true;
-            esperaInicioReta = true;
-        }
-
-        private void pbAreaDesenho_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if(polilinha)
-            {
-                polilinha = false;
-                esperaFimReta = false;
-            }
-        }
-
-        private void pbAreaDesenho_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (polilinha && (Keys)e.KeyChar == Keys.Enter)
-            {
-                polilinha = false;
-            }
-        }
-
-        private void btnAumentarEspessura_Click(object sender, EventArgs e)
-        {
-            espessura++;
-
-            if(espessura == 10)
-                btnAumentarEspessura.Enabled = false;
-            else if (!btnDiminuirEspessura.Enabled)
-            {
-                btnDiminuirEspessura.Enabled = true;
-            }
-
-            tbEspessura.Text = "Espessura: " + espessura;
-        }
-
-        private void btnDiminuirEspessura_Click(object sender, EventArgs e)
-        {
-            espessura--;
-
-            if (espessura == 1)
-                btnDiminuirEspessura.Enabled = false;
-            else if(!btnAumentarEspessura.Enabled)
-            {
-                btnAumentarEspessura.Enabled = true;
-            }
-
-            tbEspessura.Text = "Espessura: " + espessura;
-        }
-
-        private void btnSalvar_Click(object sender, EventArgs e)
-        {
-            if(MessageBox.Show("Deseja salvar o desenho?", "Salvar", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                SaveFileDialog salvar = new SaveFileDialog();
-                salvar.Filter = "Arquivo de desenho (*.txt)|*.txt";
-                salvar.Title = "Salvar desenho";
-                salvar.ShowDialog();
-
-                if (salvar.FileName != "")
-                {
-                    FileStream arquivo = new FileStream(salvar.FileName, FileMode.Create);
-                    StreamWriter escritor = new StreamWriter(arquivo);
-
-                    int xInfEsq = this.Width;
-                    int yInfEsq = this.Height;
-                    int xSupDir = 0;
-                    int ySupDir = 0;
-
-                    Ponto aux = new Ponto(1, 1, Color.Black, 1);
-
-                    escritor.Write(aux.transformaString(xInfEsq, 5));
-                    escritor.Write(aux.transformaString(yInfEsq, 5));
-                    escritor.Write(aux.transformaString(xSupDir, 5));
-                    escritor.Write(aux.transformaString(ySupDir, 5));
-                    escritor.WriteLine();
-
-                    figuras.iniciarPercursoSequencial();
-
-                    while (figuras.podePercorrer())
-                    {
-                        escritor.WriteLine(figuras.Atual.Info.ToString());
-                    }
-
-                    escritor.Close();
-                    arquivo.Close();
-                }   
-            }  
         }
     }
 }

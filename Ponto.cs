@@ -23,9 +23,8 @@ class Ponto : IComparable<Ponto>
 
     public virtual void desenhar(Color cor, Graphics g)
     {
-        Pen pen = new Pen(cor, espessura);
-        //pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
-        g.DrawLine(pen, x, y, x, y);
+        var brush = new SolidBrush(cor);
+        g.FillEllipse(brush, x - espessura / 2, y - espessura / 2, espessura, espessura);
     }
 
     public int CompareTo(Ponto other)
