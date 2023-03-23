@@ -17,10 +17,12 @@ namespace InfinityPaint
         bool esperaInicioRetangulo = false;
         bool esperaFimRetangulo    = false;
         bool polilinha             = false;
+        bool editando              = false;
 
         int espessura = 1;
 
         private ListaSimples<Ponto> figuras = new ListaSimples<Ponto>();
+        private ListaSimples<Ponto> figurasDesfeitas = new ListaSimples<Ponto>();
         Color corAtual = Color.Black;
 
         // Pontos auxiliares:
@@ -46,6 +48,16 @@ namespace InfinityPaint
         private void btnSalvar_Click(object sender, EventArgs e)
         {
             SalvarArquivo();
+        }
+
+        private void btnDesfazer_Click(object sender, EventArgs e)
+        {
+            Desfazer();
+        }
+
+        private void btnRefazer_Click(object sender, EventArgs e)
+        {
+            Refazer();
         }
 
         private void btnPonto_Click(object sender, EventArgs e)
@@ -240,12 +252,14 @@ namespace InfinityPaint
             esperaInicioRetangulo = false;
             esperaFimRetangulo    = false;
             polilinha             = false;
+            editando              = false;
         }
 
         private void AtualizarP2(int mouseX, int mouseY)
         {
             if (esperaInicioReta || esperaInicioCirculo || esperaInicioElipse || esperaInicioRetangulo ||
-                esperaFimReta    || esperaFimCirculo    || esperaFimElipse    || esperaFimRetangulo)
+                esperaFimReta    || esperaFimCirculo    || esperaFimElipse    || esperaFimRetangulo    || 
+                esperaPonto )
             {
                 p2.X = mouseX;
                 p2.Y = mouseY;
@@ -263,6 +277,8 @@ namespace InfinityPaint
             figuras.InserirAposFim(new NoLista<Ponto>(novoPonto, null));
             novoPonto.desenhar(novoPonto.Cor, pbAreaDesenho.CreateGraphics());
 
+            if(!figurasDesfeitas.EstaVazia) ResetarFigurasDesfeitas();
+
             stMensagem.Items[1].Text = "";
         }
 
@@ -274,6 +290,8 @@ namespace InfinityPaint
             p1.X = p2.X;
             p1.Y = p2.Y;
             p1.Cor = corAtual;
+
+            if (!figurasDesfeitas.EstaVazia) ResetarFigurasDesfeitas();
 
             stMensagem.Items[1].Text = "Mensagem: clique o ponto final da reta";
         }
@@ -296,6 +314,8 @@ namespace InfinityPaint
 
             figuras.InserirAposFim(new NoLista<Ponto>(novaLinha, null));
             novaLinha.desenhar(novaLinha.Cor, pbAreaDesenho.CreateGraphics());
+
+            if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
         }
 
         private void EsperaInicioCirculo()
@@ -306,7 +326,9 @@ namespace InfinityPaint
             p1.X = p2.X;
             p1.Y = p2.Y;
             p1.Cor = corAtual;
-            
+
+            if (!figurasDesfeitas.EstaVazia) ResetarFigurasDesfeitas();
+
             stMensagem.Items[1].Text = "Mensagem: clique o ponto final do círculo";
         }
         private void EsperaFimCirculo()
@@ -320,6 +342,8 @@ namespace InfinityPaint
 
             figuras.InserirAposFim(new NoLista<Ponto>(novoCirculo, null));
             novoCirculo.desenhar(novoCirculo.Cor, pbAreaDesenho.CreateGraphics());
+
+            if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
         }
 
         private void EsperaInicioElipse()
@@ -330,7 +354,9 @@ namespace InfinityPaint
             p1.X = p2.X;
             p1.Y = p2.Y;
             p1.Cor = corAtual;
-            
+
+            if (!figurasDesfeitas.EstaVazia) ResetarFigurasDesfeitas();
+
             stMensagem.Items[1].Text = "Mensagem: clique o ponto final da elipse";
         }
 
@@ -346,6 +372,8 @@ namespace InfinityPaint
 
             figuras.InserirAposFim(new NoLista<Ponto>(novaElipse, null));
             novaElipse.desenhar(novaElipse.Cor, pbAreaDesenho.CreateGraphics());
+
+            if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
         }
 
         private void EsperaInicioRetangulo()
@@ -356,6 +384,8 @@ namespace InfinityPaint
             p1.X = p2.X;
             p1.Y = p2.Y;
             p1.Cor = corAtual;
+
+            if (!figurasDesfeitas.EstaVazia) ResetarFigurasDesfeitas();
 
             stMensagem.Items[1].Text = "Mensagem: clique o ponto final do retângulo";
         }
@@ -395,6 +425,8 @@ namespace InfinityPaint
 
             figuras.InserirAposFim(new NoLista<Ponto>(novoRetangulo, null));
             novoRetangulo.desenhar(novoRetangulo.Cor, pbAreaDesenho.CreateGraphics());
+
+            if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
         }
 
         private void DesenharFiguras(Graphics g)
@@ -599,6 +631,37 @@ namespace InfinityPaint
             {
                 MessageBox.Show("Erro de leitura no arquivo", "ERRO", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void Desfazer()
+        {
+            if (!figuras.EstaVazia)
+            {
+                figurasDesfeitas.InserirAposFim(figuras.RemoverUltimo()); // Remove a figura da lista figuras
+                                                                          // e adiciona nas figuras desfeitas.
+                pbAreaDesenho.Invalidate();
+
+                if (figuras.EstaVazia) btnDesfazer.Enabled = false;
+
+                if (!btnRefazer.Enabled) btnRefazer.Enabled = true;
+            }
+        }
+
+        private void Refazer()
+        {
+            figuras.InserirAposFim(figurasDesfeitas.RemoverUltimo());
+
+            pbAreaDesenho.Invalidate();
+
+            if (figurasDesfeitas.EstaVazia) btnRefazer.Enabled = false;
+
+            if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
+        }
+
+        private void ResetarFigurasDesfeitas()
+        {
+            figurasDesfeitas.Limpar();
+            btnRefazer.Enabled = false;
         }
     }
 }

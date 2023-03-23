@@ -188,6 +188,45 @@ public class ListaSimples<Dado> where Dado : IComparable<Dado>
         return false;
     }
 
+    public Dado RemoverUltimo()
+    {
+        Dado ret = ultimo.Info;
+
+        if (EstaVazia)
+            throw new Exception("Lista vazia!");
+
+        else if (primeiro == ultimo) // se só tem um nó
+        {
+            primeiro = null;
+            ultimo = null;
+        }
+        else
+        {
+            NoLista<Dado> anterior = primeiro;
+            NoLista<Dado> atual = primeiro.Prox;
+
+            while (atual != ultimo)
+            {
+                anterior = atual;
+                atual = atual.Prox;
+            }
+
+            // Remove o ultimo
+            anterior.Prox = null;
+            ultimo = anterior;
+        }
+
+        quantosNos--;
+
+        return ret;
+    }
+
+    public void Limpar()
+    {
+        primeiro = atual = anterior = ultimo = null;
+        quantosNos = 0;
+    }
+
     public void Ordenar()
     {
         var listaOrdenada = new ListaSimples<Dado>();

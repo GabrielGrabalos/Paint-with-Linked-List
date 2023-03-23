@@ -34,6 +34,9 @@
             this.btnAbrir = new System.Windows.Forms.ToolStripButton();
             this.btnSalvar = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnDesfazer = new System.Windows.Forms.ToolStripButton();
+            this.btnRefazer = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.btnPonto = new System.Windows.Forms.ToolStripButton();
             this.btnReta = new System.Windows.Forms.ToolStripButton();
             this.btnCirculo = new System.Windows.Forms.ToolStripButton();
@@ -88,6 +91,9 @@
             this.btnAbrir,
             this.btnSalvar,
             this.toolStripSeparator1,
+            this.btnDesfazer,
+            this.btnRefazer,
+            this.toolStripSeparator5,
             this.btnPonto,
             this.btnReta,
             this.btnCirculo,
@@ -137,6 +143,33 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 44);
             // 
+            // btnDesfazer
+            // 
+            this.btnDesfazer.Enabled = false;
+            this.btnDesfazer.Image = ((System.Drawing.Image)(resources.GetObject("btnDesfazer.Image")));
+            this.btnDesfazer.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDesfazer.Name = "btnDesfazer";
+            this.btnDesfazer.Size = new System.Drawing.Size(55, 41);
+            this.btnDesfazer.Text = "Desfazer";
+            this.btnDesfazer.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnDesfazer.Click += new System.EventHandler(this.btnDesfazer_Click);
+            // 
+            // btnRefazer
+            // 
+            this.btnRefazer.Enabled = false;
+            this.btnRefazer.Image = ((System.Drawing.Image)(resources.GetObject("btnRefazer.Image")));
+            this.btnRefazer.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRefazer.Name = "btnRefazer";
+            this.btnRefazer.Size = new System.Drawing.Size(49, 41);
+            this.btnRefazer.Text = "Refazer";
+            this.btnRefazer.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnRefazer.Click += new System.EventHandler(this.btnRefazer_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 44);
+            // 
             // btnPonto
             // 
             this.btnPonto.Image = ((System.Drawing.Image)(resources.GetObject("btnPonto.Image")));
@@ -159,6 +192,7 @@
             // 
             // btnCirculo
             // 
+            this.btnCirculo.BackColor = System.Drawing.SystemColors.Control;
             this.btnCirculo.Image = ((System.Drawing.Image)(resources.GetObject("btnCirculo.Image")));
             this.btnCirculo.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnCirculo.Name = "btnCirculo";
@@ -418,5 +452,8 @@
         private ToolStripButton btnAumentarEspessura;
         private ToolStripTextBox tbEspessura;
         private ToolStripButton btnDiminuirEspessura;
+        private ToolStripButton btnDesfazer;
+        private ToolStripButton btnRefazer;
+        private ToolStripSeparator toolStripSeparator5;
     }
 }
