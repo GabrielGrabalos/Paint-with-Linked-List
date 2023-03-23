@@ -27,19 +27,7 @@ namespace InfinityPaint
         private static Ponto p1 = new Ponto(0, 0, Color.Black, 1);
         private static Ponto p2 = new Ponto(0, 0, Color.Black, 1); // Ponto temporário.
 
-        private void limparEsperas()
-        {
-            esperaPonto = false;
-            esperaInicioReta = false;
-            esperaFimReta = false;
-            esperaInicioCirculo = false;
-            esperaFimCirculo = false;
-            esperaInicioElipse = false;
-            esperaFimElipse = false;
-            esperaInicioRetangulo = false;
-            esperaFimRetangulo = false;
-            polilinha = false;
-        }
+        
 
         // Tratadores de evento:
 
@@ -175,12 +163,7 @@ namespace InfinityPaint
 
             stMensagem.Items[3].Text = "x: " + e.X + ", y: " + e.Y;
         }
-
-        private void pbAreaDesenho_Paint(object sender, PaintEventArgs e)
-        {
-            DesenharFiguras(e.Graphics); // acessa contexto gráfico e desenha
-        }
-
+        
         private void pbAreaDesenho_MouseClick(object sender, MouseEventArgs e)
         {
             if (esperaPonto)
@@ -230,6 +213,7 @@ namespace InfinityPaint
             }
         }
 
+        // Evento KeyPress (pbAreaDesenhos):
         private void pbAreaDesenho_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (polilinha && (Keys)e.KeyChar == Keys.Enter)
@@ -238,46 +222,37 @@ namespace InfinityPaint
             }
         }
 
-        
-    
+        // Evento Paint (pbAreaDesenhos):
+        private void pbAreaDesenho_Paint(object sender, PaintEventArgs e)
+        {
+            DesenharFiguras(e.Graphics); // acessa contexto gráfico e desenha
+        }
+
         // Funções:
 
-        private void SalvarArquivo()
+        private void limparEsperas()
         {
-            SaveFileDialog salvar = new SaveFileDialog();
+            esperaPonto           = false;
+            esperaInicioReta      = false;
+            esperaFimReta         = false;
+            esperaInicioCirculo   = false;
+            esperaFimCirculo      = false;
+            esperaInicioElipse    = false;
+            esperaFimElipse       = false;
+            esperaInicioRetangulo = false;
+            esperaFimRetangulo    = false;
+            polilinha             = false;
+        }
 
-            salvar.Filter = "Arquivo de desenho (*.txt)|*.txt";
-            salvar.Title  = "Salvar desenho";
-
-            salvar.ShowDialog();
-
-            if (salvar.FileName != "")
+        private void AtualizarP2(int mouseX, int mouseY)
+        {
+            if (esperaInicioReta || esperaInicioCirculo || esperaInicioElipse || esperaInicioRetangulo ||
+                esperaFimReta    || esperaFimCirculo    || esperaFimElipse    || esperaFimRetangulo)
             {
-                FileStream   arquivo  = new FileStream(salvar.FileName, FileMode.Create);
-                StreamWriter escritor = new StreamWriter(arquivo);
+                p2.X = mouseX;
+                p2.Y = mouseY;
 
-                int xSupDir = 0;
-                int ySupDir = 0;
-                int xInfEsq = this.Width;
-                int yInfEsq = this.Height;
-
-                Ponto aux = new Ponto(1, 1, Color.Black, 1);
-
-                escritor.Write(aux.transformaString(xInfEsq, 5));
-                escritor.Write(aux.transformaString(yInfEsq, 5));
-                escritor.Write(aux.transformaString(xSupDir, 5));
-                escritor.Write(aux.transformaString(ySupDir, 5));
-                escritor.WriteLine();
-
-                figuras.iniciarPercursoSequencial();
-
-                while (figuras.podePercorrer())
-                {
-                    escritor.WriteLine(figuras.Atual.Info.ToString());
-                }
-
-                escritor.Close();
-                arquivo.Close();
+                pbAreaDesenho.Invalidate();
             }
         }
 
@@ -292,11 +267,13 @@ namespace InfinityPaint
 
         private void EsperaInicioReta()
         {
-            p1.Cor = corAtual;
+            esperaInicioReta = false;
+            esperaFimReta    = true;
+
             p1.X = p2.X;
             p1.Y = p2.Y;
-            esperaInicioReta = false;
-            esperaFimReta = true;
+            p1.Cor = corAtual;
+
             stMensagem.Items[1].Text = "Mensagem: clique o ponto final da reta";
         }
 
@@ -422,105 +399,6 @@ namespace InfinityPaint
             novoRetangulo.desenhar(novoRetangulo.Cor, pbAreaDesenho.CreateGraphics());
         }
 
-        private void AtualizarP2(int mouseX, int mouseY)
-        {
-            if (esperaFimReta || esperaFimCirculo || esperaFimElipse || esperaFimRetangulo)
-            {
-                p2.X = mouseX;
-                p2.Y = mouseY;
-
-                pbAreaDesenho.Invalidate();
-            }
-        }
-
-        private void LerArquivo()
-        {
-            try
-            {
-                StreamReader arqFiguras = new StreamReader(dlgAbrir.FileName);
-
-                String linha = arqFiguras.ReadLine();
-
-                /*Double xInfEsq = Convert.ToDouble(linha.Substring(0, 5).Trim());
-                Double yInfEsq = Convert.ToDouble(linha.Substring(5, 5).Trim());
-                Double xSupDir = Convert.ToDouble(linha.Substring(10, 5).Trim());
-                Double ySupDir = Convert.ToDouble(linha.Substring(15, 5).Trim());*/
-
-                while ((linha = arqFiguras.ReadLine()) != null)
-                {
-                    String tipo = linha.Substring(0, 5).Trim();
-
-                    int xBase = Convert.ToInt32(linha.Substring(5, 5).Trim());
-                    int yBase = Convert.ToInt32(linha.Substring(10, 5).Trim());
-                    int corR = Convert.ToInt32(linha.Substring(15, 5).Trim());
-                    int corG = Convert.ToInt32(linha.Substring(20, 5).Trim());
-                    int corB = Convert.ToInt32(linha.Substring(25, 5).Trim());
-
-                    int esp;
-
-                    try
-                    {
-                        esp = Convert.ToInt32(linha.Substring(40, 5).Trim());
-                    }
-                    catch (Exception ex)
-                    {
-                        esp = 1;
-                    }
-
-                    Color cor = new Color();
-                    cor = Color.FromArgb(255, corR, corG, corB);
-
-                    switch (tipo)
-                    {
-                        case "p": // figura é um ponto
-                            figuras.InserirAposFim(
-                            new NoLista<Ponto>(new Ponto(xBase, yBase, cor, esp), null));
-                            break;
-
-                        case "l": // figura é uma reta
-                            int xFinal = Convert.ToInt32(linha.Substring(30, 5).Trim());
-                            int yFinal = Convert.ToInt32(linha.Substring(35, 5).Trim());
-                            figuras.InserirAposFim(new NoLista<Ponto>(
-                            new Reta(xBase, yBase, xFinal, yFinal, cor, esp), null));
-                            break;
-
-                        case "c": // figura é um círculo
-                            int raio = Convert.ToInt32(linha.Substring(30, 5).Trim());
-                            figuras.InserirAposFim(new NoLista<Ponto>(
-                            new Circulo(xBase, yBase, raio, cor, esp), null));
-                            break;
-                        case "e":
-                            int raio1 = Convert.ToInt32(linha.Substring(30, 5).Trim());
-                            int raio2 = Convert.ToInt32(linha.Substring(35, 5).Trim());
-                            figuras.InserirAposFim(new NoLista<Ponto>(
-                            new Elipse(xBase, yBase, raio1, raio2, cor, esp), null));
-                            break;
-                        case "ret":
-                            int largura = Convert.ToInt32(linha.Substring(30, 5).Trim());
-                            int altura = Convert.ToInt32(linha.Substring(35, 5).Trim());
-                            figuras.InserirAposFim(new NoLista<Ponto>(
-                            new Retangulo(xBase, yBase, largura, altura, cor, esp), null));
-                            break;
-                        case "r":
-                            int x2 = Convert.ToInt32(linha.Substring(30, 5).Trim());
-                            int y2 = Convert.ToInt32(linha.Substring(35, 5).Trim());
-                            figuras.InserirAposFim(new NoLista<Ponto>(
-                            new Reta(xBase, yBase, x2, y2, cor, esp), null));
-                            break;
-                    }
-                }
-
-                arqFiguras.Close();
-                this.Text = dlgAbrir.FileName;
-                pbAreaDesenho.Invalidate();
-
-            }
-            catch (IOException)
-            {
-                Console.WriteLine("Erro de leitura no arquivo");
-            }
-        }
-
         private void DesenharFiguras(Graphics g)
         {
             figuras.iniciarPercursoSequencial();
@@ -534,6 +412,7 @@ namespace InfinityPaint
             if (esperaFimReta)
             {
                 Pen pen = new Pen(p1.Cor, espessura);
+
                 g.DrawLine(pen, p1.X, p1.Y, p2.X, p2.Y);
             }
             else if (esperaFimCirculo)
@@ -562,15 +441,165 @@ namespace InfinityPaint
                 int largura = Math.Abs(p2.X - p1.X);
                 int altura = Math.Abs(p2.Y - p1.Y);
 
-                //g.DrawRectangle(pen, p1.X, p1.Y, largura, altura);
+                int x1, y1;
+
                 if (p1.X < p2.X && p1.Y < p2.Y)
-                    g.DrawRectangle(pen, p1.X, p1.Y, largura, altura);
+                {
+                    x1 = p1.X;
+                    y1 = p1.Y;
+                }
                 else if (p1.X > p2.X && p1.Y < p2.Y)
-                    g.DrawRectangle(pen, p2.X, p1.Y, largura, altura);
+                {
+                    x1 = p2.X;
+                    y1 = p1.Y;
+                }
                 else if (p1.X < p2.X && p1.Y > p2.Y)
-                    g.DrawRectangle(pen, p1.X, p2.Y, largura, altura);
-                else if (p1.X > p2.X && p1.Y > p2.Y)
-                    g.DrawRectangle(pen, p2.X, p2.Y, largura, altura);
+                {
+                    x1 = p1.X;
+                    y1 = p2.Y;
+                }
+                else
+                {
+                    x1 = p2.X;
+                    y1 = p2.Y;
+                }
+
+                g.DrawRectangle(pen, x1, y1, largura, altura);
+            }
+        }
+
+        private void SalvarArquivo()
+        {
+            SaveFileDialog salvar = new SaveFileDialog();
+
+            salvar.Filter = "Arquivo de desenho (*.txt)|*.txt";
+            salvar.Title = "Salvar desenho";
+
+            salvar.ShowDialog();
+
+            if (salvar.FileName != "")
+            {
+                FileStream arquivo = new FileStream(salvar.FileName, FileMode.Create);
+                StreamWriter escritor = new StreamWriter(arquivo);
+
+                int xSupDir = 0;
+                int ySupDir = 0;
+                int xInfEsq = this.Width;
+                int yInfEsq = this.Height;
+
+                Ponto aux = new Ponto(1, 1, Color.Black, 1);
+
+                escritor.Write(aux.transformaString(xInfEsq, 5));
+                escritor.Write(aux.transformaString(yInfEsq, 5));
+                escritor.Write(aux.transformaString(xSupDir, 5));
+                escritor.Write(aux.transformaString(ySupDir, 5));
+                escritor.WriteLine();
+
+                figuras.iniciarPercursoSequencial();
+
+                while (figuras.podePercorrer())
+                {
+                    escritor.WriteLine(figuras.Atual.Info.ToString());
+                }
+
+                escritor.Close();
+                arquivo.Close();
+            }
+        }
+
+        private void LerArquivo()
+        {
+            try
+            {
+                StreamReader arqFiguras = new StreamReader(dlgAbrir.FileName);
+
+                String linha = arqFiguras.ReadLine();
+
+                Double xInfEsq = Convert.ToDouble(linha.Substring( 0, 5).Trim());
+                Double yInfEsq = Convert.ToDouble(linha.Substring( 5, 5).Trim());
+                Double xSupDir = Convert.ToDouble(linha.Substring(10, 5).Trim());
+                Double ySupDir = Convert.ToDouble(linha.Substring(15, 5).Trim());
+
+                while ((linha = arqFiguras.ReadLine()) != null)
+                {
+                    String tipo = linha.Substring(0, 5).Trim();
+
+                    int xBase = Convert.ToInt32(linha.Substring( 5, 5).Trim());
+                    int yBase = Convert.ToInt32(linha.Substring(10, 5).Trim());
+                    int corR  = Convert.ToInt32(linha.Substring(15, 5).Trim());
+                    int corG  = Convert.ToInt32(linha.Substring(20, 5).Trim());
+                    int corB  = Convert.ToInt32(linha.Substring(25, 5).Trim());
+
+                    int esp;
+
+                    try
+                    {
+                        esp = Convert.ToInt32(linha.Substring(40, 5).Trim());
+                    }
+                    catch (Exception ex)
+                    {
+                        esp = 1;
+                    }
+
+                    Color cor = new Color();
+                    cor = Color.FromArgb(255, corR, corG, corB);
+
+                    switch (tipo[0])
+                    {
+                        // Ponto:
+                        case 'p':
+                            figuras.InserirAposFim(
+                            new NoLista<Ponto>(new Ponto(xBase, yBase, cor, esp), null));
+                            break;
+
+                        // Linha (reta):
+                        case 'l':
+                            int xFinal = Convert.ToInt32(linha.Substring(30, 5).Trim());
+                            int yFinal = Convert.ToInt32(linha.Substring(35, 5).Trim());
+
+                            figuras.InserirAposFim(new NoLista<Ponto>(
+                            new Reta(xBase, yBase, xFinal, yFinal, cor, esp), null));
+
+                            break;
+
+                        // Círculo:
+                        case 'c':
+                            int raio = Convert.ToInt32(linha.Substring(30, 5).Trim());
+
+                            figuras.InserirAposFim(new NoLista<Ponto>(
+                            new Circulo(xBase, yBase, raio, cor, esp), null));
+
+                            break;
+
+                        // Elipse
+                        case 'e':
+                            int raio1 = Convert.ToInt32(linha.Substring(30, 5).Trim());
+                            int raio2 = Convert.ToInt32(linha.Substring(35, 5).Trim());
+
+                            figuras.InserirAposFim(new NoLista<Ponto>(
+                            new Elipse(xBase, yBase, raio1, raio2, cor, esp), null));
+
+                            break;
+
+                        // Retângulo:
+                        case 'r': 
+                            int largura = Convert.ToInt32(linha.Substring(30, 5).Trim());
+                            int altura  = Convert.ToInt32(linha.Substring(35, 5).Trim());
+
+                            figuras.InserirAposFim(new NoLista<Ponto>(
+                            new Retangulo(xBase, yBase, largura, altura, cor, esp), null));
+
+                            break;
+                    }
+                }
+
+                arqFiguras.Close();
+                this.Text = dlgAbrir.FileName;
+                pbAreaDesenho.Invalidate();
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("Erro de leitura no arquivo", "ERRO", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
