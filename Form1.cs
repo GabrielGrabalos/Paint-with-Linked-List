@@ -11,6 +11,9 @@ namespace InfinityPaint
         bool esperaFimCirculo = false;
         bool esperaInicioElipse = false;
         bool esperaFimElipse = false;
+        bool esperaInicioRetangulo = false;
+        bool esperaFimRetangulo = false;
+        bool polilinha = false;
         private ListaSimples<Ponto> figuras = new ListaSimples<Ponto>();
         Color corAtual = Color.Black;
         private static Ponto p1 = new Ponto(0, 0, Color.Black);
@@ -25,11 +28,14 @@ namespace InfinityPaint
             esperaFimCirculo = false;
             esperaInicioElipse = false;
             esperaFimElipse = false;
+            esperaInicioRetangulo = false;
+            esperaFimRetangulo = false;
         }
 
         public frmGrafico()
         {
             InitializeComponent();
+            pbAreaDesenho.KeyPress += new KeyPressEventHandler(pbAreaDesenho_KeyPress);
         }
 
         private void btnSair_Click(object sender, EventArgs e)
@@ -119,7 +125,7 @@ namespace InfinityPaint
         {
             stMensagem.Items[3].Text = "x: " + e.X + ", y: " + e.Y;
 
-            if (esperaFimReta || esperaFimCirculo || esperaFimElipse)
+            if (esperaFimReta || esperaFimCirculo || esperaFimElipse || esperaFimRetangulo)
             {
                 p2.X = e.X;
                 p2.Y = e.Y;
@@ -174,6 +180,25 @@ namespace InfinityPaint
                 g.DrawEllipse(pen, p1.X - raio1, p1.Y - raio2, // centro - raio
                               2 * raio1, 2 * raio2);
             }
+            else if (esperaFimRetangulo)
+            {
+                Pen pen = new Pen(p1.Cor);
+
+                int largura = Math.Abs(p2.X - p1.X);
+                int altura = Math.Abs(p2.Y - p1.Y);
+
+                
+
+                //g.DrawRectangle(pen, p1.X, p1.Y, largura, altura);
+                if(p1.X < p2.X && p1.Y < p2.Y)
+                    g.DrawRectangle(pen, p1.X, p1.Y, largura, altura);
+                else if (p1.X > p2.X && p1.Y < p2.Y)
+                    g.DrawRectangle(pen, p2.X, p1.Y, largura, altura);
+                else if (p1.X < p2.X && p1.Y > p2.Y)
+                    g.DrawRectangle(pen, p1.X, p2.Y, largura, altura);
+                else if (p1.X > p2.X && p1.Y > p2.Y)
+                    g.DrawRectangle(pen, p2.X, p2.Y, largura, altura);
+            }
         }
 
         private void pbAreaDesenho_MouseClick(object sender, MouseEventArgs e)
@@ -197,11 +222,29 @@ namespace InfinityPaint
             }
             else if (esperaFimReta)
             {
-                esperaInicioReta = false;
-                esperaFimReta = false;
                 Reta novaLinha = new Reta(p1.X, p1.Y, e.X, e.Y, corAtual);
+
                 figuras.InserirAposFim(new NoLista<Ponto>(novaLinha, null));
                 novaLinha.desenhar(novaLinha.Cor, pbAreaDesenho.CreateGraphics());
+
+                esperaInicioReta = false;
+
+                if (!polilinha)
+                    esperaFimReta = false;
+                else
+                {
+                    // Checks if the mouse is 3 pixels away from the starting point
+                    if (Math.Abs(e.X - p1.X) < 3 && Math.Abs(e.Y - p1.Y) < 3)
+                    {
+                        esperaFimReta = false;
+                        polilinha = false;
+                    }
+                    else
+                    {
+                        p1.X = e.X;
+                        p1.Y = e.Y;
+                    }
+                }
             }
             else if (esperaInicioCirculo)
             {
@@ -237,6 +280,34 @@ namespace InfinityPaint
                 figuras.InserirAposFim(new NoLista<Ponto>(novaElipse, null));
                 novaElipse.desenhar(novaElipse.Cor, pbAreaDesenho.CreateGraphics());
             }
+            else if (esperaInicioRetangulo)
+            {
+                p1.Cor = corAtual;
+                p1.X = e.X;
+                p1.Y = e.Y;
+                esperaInicioRetangulo = false;
+                esperaFimRetangulo = true;
+                stMensagem.Items[1].Text = "Mensagem: clique o ponto final do retângulo";
+            }
+            else if (esperaFimRetangulo)
+            {
+                esperaInicioRetangulo = false;
+                esperaFimRetangulo = false;
+
+                Retangulo novoRetangulo;
+
+                if (p1.X < e.X && p1.Y < e.Y)
+                    novoRetangulo = new Retangulo(p1.X, p1.Y, Math.Abs(e.X - p1.X), Math.Abs(e.Y - p1.Y), p1.Cor);
+                else if (p1.X > e.X && p1.Y < e.Y)
+                    novoRetangulo = new Retangulo(e.X, p1.Y, Math.Abs(e.X - p1.X), Math.Abs(e.Y - p1.Y), p1.Cor);
+                else if (p1.X < e.X && p1.Y > e.Y)
+                    novoRetangulo = new Retangulo(p1.X, e.Y, Math.Abs(e.X - p1.X), Math.Abs(e.Y - p1.Y), p1.Cor);
+                else
+                    novoRetangulo = new Retangulo(e.X, e.Y, Math.Abs(e.X - p1.X), Math.Abs(e.Y - p1.Y), p1.Cor);
+
+                figuras.InserirAposFim(new NoLista<Ponto>(novoRetangulo, null));
+                novoRetangulo.desenhar(novoRetangulo.Cor, pbAreaDesenho.CreateGraphics());
+            }
         }
 
         private void btnReta_Click(object sender, EventArgs e)
@@ -258,6 +329,37 @@ namespace InfinityPaint
             stMensagem.Items[1].Text = "Clique no local do ponto inicial da elipse:";
             limparEsperas();
             esperaInicioElipse = true;
+        }
+
+        private void btnRetangulo_Click(object sender, EventArgs e)
+        {
+            stMensagem.Items[1].Text = "Clique no local do ponto inicial do retângulo:";
+            limparEsperas();
+            esperaInicioRetangulo = true;
+        }
+
+        private void btnPolilinha_Click(object sender, EventArgs e)
+        {
+            stMensagem.Items[1].Text = "Clique no local do ponto inicial das retas:";
+            limparEsperas();
+            polilinha = true;
+            esperaInicioReta = true;
+        }
+
+        private void pbAreaDesenho_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if(polilinha)
+            {
+                polilinha = false;
+            }
+        }
+
+        private void pbAreaDesenho_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (polilinha && (Keys)e.KeyChar == Keys.Enter)
+            {
+                polilinha = false;
+            }
         }
     }
 }

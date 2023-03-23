@@ -74,6 +74,7 @@
             this.pbAreaDesenho.TabStop = false;
             this.pbAreaDesenho.Paint += new System.Windows.Forms.PaintEventHandler(this.pbAreaDesenho_Paint);
             this.pbAreaDesenho.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbAreaDesenho_MouseClick);
+            this.pbAreaDesenho.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pbAreaDesenho_MouseDoubleClick);
             this.pbAreaDesenho.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbAreaDesenho_MouseMove);
             // 
             // toolStrip1
@@ -175,6 +176,7 @@
             this.btnRetangulo.Size = new System.Drawing.Size(65, 41);
             this.btnRetangulo.Text = "Retângulo";
             this.btnRetangulo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnRetangulo.Click += new System.EventHandler(this.btnRetangulo_Click);
             // 
             // btnPolilinha
             // 
@@ -184,6 +186,7 @@
             this.btnPolilinha.Size = new System.Drawing.Size(60, 41);
             this.btnPolilinha.Text = "PoliLinha";
             this.btnPolilinha.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnPolilinha.Click += new System.EventHandler(this.btnPolilinha_Click);
             // 
             // toolStripSeparator2
             // 
