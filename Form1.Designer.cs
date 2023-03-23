@@ -47,6 +47,10 @@
             this.displayDeCor = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnAumentarEspessura = new System.Windows.Forms.ToolStripButton();
+            this.tbEspessura = new System.Windows.Forms.ToolStripTextBox();
+            this.btnDiminuirEspessura = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.btnSair = new System.Windows.Forms.ToolStripButton();
             this.stMensagem = new System.Windows.Forms.StatusStrip();
@@ -97,6 +101,10 @@
             this.displayDeCor,
             this.toolStripButton2,
             this.toolStripSeparator3,
+            this.btnAumentarEspessura,
+            this.tbEspessura,
+            this.btnDiminuirEspessura,
+            this.toolStripSeparator4,
             this.toolStripButton4,
             this.btnSair});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -122,6 +130,7 @@
             this.btnSalvar.Size = new System.Drawing.Size(42, 41);
             this.btnSalvar.Text = "Salvar";
             this.btnSalvar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnSalvar.Click += new System.EventHandler(this.btnSalvar_Click);
             // 
             // toolStripSeparator1
             // 
@@ -249,6 +258,42 @@
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 44);
             // 
+            // btnAumentarEspessura
+            // 
+            this.btnAumentarEspessura.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnAumentarEspessura.Image = ((System.Drawing.Image)(resources.GetObject("btnAumentarEspessura.Image")));
+            this.btnAumentarEspessura.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAumentarEspessura.Name = "btnAumentarEspessura";
+            this.btnAumentarEspessura.Size = new System.Drawing.Size(26, 41);
+            this.btnAumentarEspessura.ToolTipText = "Aumentar espessura da caneta";
+            this.btnAumentarEspessura.Click += new System.EventHandler(this.btnAumentarEspessura_Click);
+            // 
+            // tbEspessura
+            // 
+            this.tbEspessura.AutoSize = false;
+            this.tbEspessura.Enabled = false;
+            this.tbEspessura.Name = "tbEspessura";
+            this.tbEspessura.Size = new System.Drawing.Size(80, 44);
+            this.tbEspessura.Text = "Espessura: 1";
+            this.tbEspessura.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbEspessura.ToolTipText = "Espesura da caneta";
+            // 
+            // btnDiminuirEspessura
+            // 
+            this.btnDiminuirEspessura.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnDiminuirEspessura.Enabled = false;
+            this.btnDiminuirEspessura.Image = ((System.Drawing.Image)(resources.GetObject("btnDiminuirEspessura.Image")));
+            this.btnDiminuirEspessura.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDiminuirEspessura.Name = "btnDiminuirEspessura";
+            this.btnDiminuirEspessura.Size = new System.Drawing.Size(26, 41);
+            this.btnDiminuirEspessura.ToolTipText = "Diminuir espessura da caneta";
+            this.btnDiminuirEspessura.Click += new System.EventHandler(this.btnDiminuirEspessura_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 44);
+            // 
             // toolStripButton4
             // 
             this.toolStripButton4.AutoSize = false;
@@ -369,5 +414,9 @@
         private ToolStripStatusLabel toolStripStatusLabel3;
         private ToolStripStatusLabel toolStripStatusLabel4;
         private ToolStripButton toolStripButton4;
+        private ToolStripSeparator toolStripSeparator4;
+        private ToolStripButton btnAumentarEspessura;
+        private ToolStripTextBox tbEspessura;
+        private ToolStripButton btnDiminuirEspessura;
     }
 }
