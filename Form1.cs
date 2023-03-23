@@ -7,16 +7,16 @@ namespace InfinityPaint
     public partial class frmGrafico : Form
     {
         // Variáveis de controle
-        bool esperaPonto = false;
-        bool esperaInicioReta = false;
-        bool esperaFimReta = false;
-        bool esperaInicioCirculo = false;
-        bool esperaFimCirculo = false;
-        bool esperaInicioElipse = false;
-        bool esperaFimElipse = false;
+        bool esperaPonto           = false;
+        bool esperaInicioReta      = false;
+        bool esperaFimReta         = false;
+        bool esperaInicioCirculo   = false;
+        bool esperaFimCirculo      = false;
+        bool esperaInicioElipse    = false;
+        bool esperaFimElipse       = false;
         bool esperaInicioRetangulo = false;
-        bool esperaFimRetangulo = false;
-        bool polilinha = false;
+        bool esperaFimRetangulo    = false;
+        bool polilinha             = false;
 
         int espessura = 1;
 
@@ -26,8 +26,6 @@ namespace InfinityPaint
         // Pontos auxiliares:
         private static Ponto p1 = new Ponto(0, 0, Color.Black, 1);
         private static Ponto p2 = new Ponto(0, 0, Color.Black, 1); // Ponto temporário.
-
-        
 
         // Tratadores de evento:
 
@@ -536,7 +534,7 @@ namespace InfinityPaint
                     {
                         esp = Convert.ToInt32(linha.Substring(40, 5).Trim());
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         esp = 1;
                     }
