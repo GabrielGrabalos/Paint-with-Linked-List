@@ -256,10 +256,13 @@ namespace InfinityPaint
 
         private void EsperaPonto()
         {
+            esperaPonto = false;
+
             Ponto novoPonto = new Ponto(p2.X, p2.Y, corAtual, espessura);
+
             figuras.InserirAposFim(new NoLista<Ponto>(novoPonto, null));
             novoPonto.desenhar(novoPonto.Cor, pbAreaDesenho.CreateGraphics());
-            esperaPonto = false;
+
             stMensagem.Items[1].Text = "";
         }
 
@@ -279,6 +282,8 @@ namespace InfinityPaint
         {
             esperaInicioReta = false;
 
+            Reta novaLinha = new Reta(p1.X, p1.Y, p2.X, p2.Y, corAtual, espessura);
+
             if (polilinha)
             {
                 p1.X = p2.X;
@@ -288,8 +293,6 @@ namespace InfinityPaint
             {
                 esperaFimReta = false;
             }
-
-            Reta novaLinha = new Reta(p1.X, p1.Y, p2.X, p2.Y, corAtual, espessura);
 
             figuras.InserirAposFim(new NoLista<Ponto>(novaLinha, null));
             novaLinha.desenhar(novaLinha.Cor, pbAreaDesenho.CreateGraphics());
@@ -311,12 +314,11 @@ namespace InfinityPaint
             esperaInicioCirculo = false;
             esperaFimCirculo    = false;
 
-            int raio = Math.Max(Math.Abs(p1.X - p2.X), Math.Abs(p1.Y - p2.Y));
+            int raio = (int)Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
 
             Circulo novoCirculo = new Circulo(p1.X, p1.Y, raio, p1.Cor, espessura);
 
             figuras.InserirAposFim(new NoLista<Ponto>(novoCirculo, null));
-
             novoCirculo.desenhar(novoCirculo.Cor, pbAreaDesenho.CreateGraphics());
         }
 
@@ -343,7 +345,6 @@ namespace InfinityPaint
             Elipse novaElipse = new Elipse(p1.X, p1.Y, raio1, raio2, p1.Cor, espessura);
 
             figuras.InserirAposFim(new NoLista<Ponto>(novaElipse, null));
-
             novaElipse.desenhar(novaElipse.Cor, pbAreaDesenho.CreateGraphics());
         }
 
@@ -393,7 +394,6 @@ namespace InfinityPaint
             Retangulo novoRetangulo = new Retangulo(x1, y1, largura, altura, p1.Cor, espessura);
 
             figuras.InserirAposFim(new NoLista<Ponto>(novoRetangulo, null));
-
             novoRetangulo.desenhar(novoRetangulo.Cor, pbAreaDesenho.CreateGraphics());
         }
 
@@ -417,7 +417,7 @@ namespace InfinityPaint
             {
                 Pen pen = new Pen(p1.Cor, espessura);
 
-                int raio = Math.Max(Math.Abs(p1.X - p2.X), Math.Abs(p1.Y - p2.Y));
+                int raio = (int)Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
 
                 g.DrawEllipse(pen, p1.X - raio, p1.Y - raio, // centro - raio
                               2 * raio, 2 * raio);
