@@ -199,7 +199,7 @@ namespace InfinityPaint
             {
                 Pen pen = new Pen(p1.Cor, espessura);
 
-                int raio = Math.Abs(p1.X - p2.X);
+                int raio = Math.Max(Math.Abs(p1.X - p2.X), Math.Abs(p1.Y - p2.Y));
 
                 g.DrawEllipse(pen, p1.X - raio, p1.Y - raio, // centro - raio
                               2 * raio, 2 * raio);
@@ -284,7 +284,11 @@ namespace InfinityPaint
             {
                 esperaInicioCirculo = false;
                 esperaFimCirculo = false;
-                Circulo novoCirculo = new Circulo(p1.X, p1.Y, Math.Abs(e.X - p1.X), p1.Cor, espessura);
+
+                int raio = Math.Max(Math.Abs(p1.X - p2.X), Math.Abs(p1.Y - p2.Y));
+
+                Circulo novoCirculo = new Circulo(p1.X, p1.Y, raio, p1.Cor, espessura);
+
                 figuras.InserirAposFim(new NoLista<Ponto>(novoCirculo, null));
                 novoCirculo.desenhar(novoCirculo.Cor, pbAreaDesenho.CreateGraphics());
             }
