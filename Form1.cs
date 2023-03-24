@@ -17,7 +17,9 @@ namespace InfinityPaint
         bool esperaInicioRetangulo = false;
         bool esperaFimRetangulo    = false;
         bool polilinha             = false;
-        bool editando              = false;
+        bool drag                  = false;
+
+        string editando = "";
 
         int espessura = 1;
 
@@ -30,6 +32,7 @@ namespace InfinityPaint
         private static Ponto p2 = new Ponto(0, 0, Color.Black, 1); // Ponto temporário.
 
         ToolStripButton btnAtivado = null;
+        CaixaDeEdicao caixaDeEdicao;
 
         // Tratadores de evento:
 
@@ -89,6 +92,7 @@ namespace InfinityPaint
 
         private void btnPolilinha_Click(object sender, EventArgs e)
         {
+            esperaInicioReta = false;
             BtnConfig(ref esperaInicioReta, btnPolilinha, "Clique no local do ponto inicial das retas:");
             polilinha = true;
         }
@@ -147,11 +151,112 @@ namespace InfinityPaint
 
         private void pbAreaDesenho_MouseMove(object sender, MouseEventArgs e)
         {
+            if (caixaDeEdicao != null)
+            {
+                string estadoSeta = caixaDeEdicao.IsHovering(e.X, e.Y);
+
+                if (estadoSeta != "")
+                {
+                    switch (estadoSeta)
+                    {
+                        case "N":
+                            this.Cursor = Cursors.SizeNS;
+                            break;
+                        case "S":
+                            this.Cursor = Cursors.SizeNS;
+                            break;
+                        case "E":
+                            this.Cursor = Cursors.SizeWE;
+                            break;
+                        case "W":
+                            this.Cursor = Cursors.SizeWE;
+                            break;
+                        case "NE":
+                            this.Cursor = Cursors.SizeNESW;
+                            break;
+                        case "NW":
+                            this.Cursor = Cursors.SizeNWSE;
+                            break;
+                        case "SE":
+                            this.Cursor = Cursors.SizeNWSE;
+                            break;
+                        case "SW":
+                            this.Cursor = Cursors.SizeNESW;
+                            break;
+                        case "C":
+                            this.Cursor = Cursors.SizeAll;
+                            break;
+                    }
+                }
+                else if (this.Cursor != Cursors.Default && editando == "")
+                {
+                    this.Cursor = Cursors.Default;
+                }
+
+
+                if (drag)
+                {
+                    switch (editando)
+                    {
+                        case "N":
+                            caixaDeEdicao.Altura = caixaDeEdicao.Altura - (e.Y - caixaDeEdicao.Y);
+                            caixaDeEdicao.Y = e.Y;
+                            break;
+                        case "S":
+                            caixaDeEdicao.Altura = e.Y - caixaDeEdicao.Y;
+                            break;
+                        case "E":
+                            caixaDeEdicao.Largura = e.X - caixaDeEdicao.X;
+                            break;
+                        case "W":
+                            caixaDeEdicao.Largura = caixaDeEdicao.Largura - (e.X - caixaDeEdicao.X);
+                            caixaDeEdicao.X = e.X;
+                            break;
+                        case "NE":
+                            caixaDeEdicao.Altura = caixaDeEdicao.Altura - (e.Y - caixaDeEdicao.Y);
+                            caixaDeEdicao.Y = e.Y;
+                            caixaDeEdicao.Largura = e.X - caixaDeEdicao.X;
+                            break;
+                        case "NW":
+                            caixaDeEdicao.Altura = caixaDeEdicao.Altura - (e.Y - caixaDeEdicao.Y);
+                            caixaDeEdicao.Largura = caixaDeEdicao.Largura - (e.X - caixaDeEdicao.X);
+                            caixaDeEdicao.X = e.X;
+                            caixaDeEdicao.Y = e.Y;
+                            break;
+                        case "SE":
+                            caixaDeEdicao.Altura = e.Y - caixaDeEdicao.Y;
+                            caixaDeEdicao.Largura = e.X - caixaDeEdicao.X;
+                            break;
+                        case "SW":
+                            caixaDeEdicao.Altura = e.Y - caixaDeEdicao.Y;
+                            caixaDeEdicao.Largura = caixaDeEdicao.Largura - (e.X - caixaDeEdicao.X);
+                            caixaDeEdicao.X = e.X;
+                            break;
+                        case "C":
+                            caixaDeEdicao.X = e.X - (caixaDeEdicao.Largura / 2);
+                            caixaDeEdicao.Y = e.Y - (caixaDeEdicao.Altura / 2);
+                            break;
+                    }
+
+                    if(caixaDeEdicao.Altura <4)
+                    {
+                        caixaDeEdicao.Altura = 4;
+                    }
+                    if (caixaDeEdicao.Largura < 4)
+                    { 
+                        caixaDeEdicao.Largura = 4;
+                    }
+
+
+                    pbAreaDesenho.Invalidate();
+                }
+            }
+
             AtualizarP2(e.X, e.Y);
 
             stMensagem.Items[3].Text = "x: " + e.X + ", y: " + e.Y;
         }
-        
+
         private void pbAreaDesenho_MouseClick(object sender, MouseEventArgs e)
         {
             if (esperaPonto)
@@ -231,7 +336,9 @@ namespace InfinityPaint
             esperaInicioRetangulo = false;
             esperaFimRetangulo    = false;
             polilinha             = false;
-            editando              = false;
+            drag                  = false;
+
+            editando = "";
         }
 
         private void AtualizarP2(int mouseX, int mouseY)
@@ -281,6 +388,10 @@ namespace InfinityPaint
 
             if (!figurasDesfeitas.EstaVazia) ResetarFigurasDesfeitas();
 
+            btnAtivado.BackColor = SystemColors.Control;
+
+            if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
+
             stMensagem.Items[1].Text = "";
         }
 
@@ -317,8 +428,7 @@ namespace InfinityPaint
             figuras.InserirAposFim(new NoLista<Ponto>(novaLinha, null));
             novaLinha.desenhar(novaLinha.Cor, pbAreaDesenho.CreateGraphics());
 
-            /*if (btnReta.BackColor != SystemColors.Control) 
-                btnReta.BackColor = SystemColors.Control;*/
+            btnAtivado.BackColor = SystemColors.Control;
 
             if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
         }
@@ -347,6 +457,8 @@ namespace InfinityPaint
 
             figuras.InserirAposFim(new NoLista<Ponto>(novoCirculo, null));
             novoCirculo.desenhar(novoCirculo.Cor, pbAreaDesenho.CreateGraphics());
+
+            btnAtivado.BackColor = SystemColors.Control;
 
             if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
         }
@@ -377,6 +489,8 @@ namespace InfinityPaint
 
             figuras.InserirAposFim(new NoLista<Ponto>(novaElipse, null));
             novaElipse.desenhar(novaElipse.Cor, pbAreaDesenho.CreateGraphics());
+
+            btnAtivado.BackColor = SystemColors.Control;
 
             if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
         }
@@ -431,11 +545,16 @@ namespace InfinityPaint
             figuras.InserirAposFim(new NoLista<Ponto>(novoRetangulo, null));
             novoRetangulo.desenhar(novoRetangulo.Cor, pbAreaDesenho.CreateGraphics());
 
+            btnAtivado.BackColor = SystemColors.Control;
+
             if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
         }
 
         private void DesenharFiguras(Graphics g)
         {
+            if (caixaDeEdicao != null)
+                caixaDeEdicao.desenhar(caixaDeEdicao.Cor, g);
+
             figuras.iniciarPercursoSequencial();
 
             while (figuras.podePercorrer())
@@ -461,7 +580,7 @@ namespace InfinityPaint
             }
             else if (esperaFimElipse)
             {
-                Pen pen = new Pen(p1.Cor);
+                Pen pen = new Pen(p1.Cor, espessura);
 
                 int raio1 = Math.Abs(p1.X - p2.X);
                 int raio2 = Math.Abs(p1.Y - p2.Y);
@@ -667,6 +786,24 @@ namespace InfinityPaint
         {
             figurasDesfeitas.Limpar();
             btnRefazer.Enabled = false;
+        }
+
+        private void pbAreaDesenho_MouseDown(object sender, MouseEventArgs e)
+        {
+            if(this.Cursor != Cursors.Default)
+            {
+                drag = true;
+                mouseAntX = e.X;
+                mouseAntY = e.Y;
+
+                editando = caixaDeEdicao.IsHovering(e.X, e.Y);
+            }
+        }
+
+        private void pbAreaDesenho_MouseUp(object sender, MouseEventArgs e)
+        {
+            drag = false;
+            editando = "";
         }
     }
 }

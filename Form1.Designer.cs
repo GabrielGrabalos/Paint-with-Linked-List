@@ -82,7 +82,9 @@
             this.pbAreaDesenho.Paint += new System.Windows.Forms.PaintEventHandler(this.pbAreaDesenho_Paint);
             this.pbAreaDesenho.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pbAreaDesenho_MouseClick);
             this.pbAreaDesenho.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.pbAreaDesenho_MouseDoubleClick);
+            this.pbAreaDesenho.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pbAreaDesenho_MouseDown);
             this.pbAreaDesenho.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pbAreaDesenho_MouseMove);
+            this.pbAreaDesenho.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pbAreaDesenho_MouseUp);
             // 
             // toolStrip1
             // 
@@ -254,6 +256,7 @@
             this.btnCor.Size = new System.Drawing.Size(30, 41);
             this.btnCor.Text = "Cor";
             this.btnCor.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnCor.ToolTipText = "Seletor de cor";
             this.btnCor.Click += new System.EventHandler(this.btnCor_Click);
             // 
             // toolStripButton1
