@@ -29,6 +29,8 @@ namespace InfinityPaint
         private static Ponto p1 = new Ponto(0, 0, Color.Black, 1);
         private static Ponto p2 = new Ponto(0, 0, Color.Black, 1); // Ponto temporário.
 
+        ToolStripButton btnAtivado = null;
+
         // Tratadores de evento:
 
         public frmGrafico()
@@ -62,57 +64,33 @@ namespace InfinityPaint
 
         private void btnPonto_Click(object sender, EventArgs e)
         {
-            limparEsperas();
-
-            esperaPonto = true;
-
-            stMensagem.Items[1].Text = "Clique no local do ponto desejado:";
+            BtnConfig(ref esperaPonto, btnPonto, "Clique no local do ponto desejado:");
         }
 
         private void btnReta_Click(object sender, EventArgs e)
         {
-            limparEsperas();
-
-            esperaInicioReta = true;
-
-            stMensagem.Items[1].Text = "Clique no local do ponto inicial da reta:";
+            BtnConfig(ref esperaInicioReta, btnReta, "Clique no local do ponto inicial da reta:");
         }
 
         private void btnCirculo_Click(object sender, EventArgs e)
         {
-            limparEsperas();
-
-            esperaInicioCirculo = true;
-
-            stMensagem.Items[1].Text = "Clique no local do ponto inicial do círculo:";
+            BtnConfig(ref esperaInicioCirculo, btnCirculo, "Clique no local do ponto inicial do círculo:");
         }
 
         private void btnElipse_Click(object sender, EventArgs e)
         {
-            limparEsperas();
-
-            esperaInicioElipse = true;
-
-            stMensagem.Items[1].Text = "Clique no local do ponto inicial da elipse:";
+            BtnConfig(ref esperaInicioElipse, btnElipse, "Clique no local do ponto inicial da elipse:");
         }
 
         private void btnRetangulo_Click(object sender, EventArgs e)
         {
-            limparEsperas();
-
-            esperaInicioRetangulo = true;
-
-            stMensagem.Items[1].Text = "Clique no local do ponto inicial do retângulo:";
+            BtnConfig(ref esperaInicioRetangulo, btnRetangulo, "Clique no local do ponto inicial do retângulo:");
         }
 
         private void btnPolilinha_Click(object sender, EventArgs e)
         {
-            limparEsperas();
-
+            BtnConfig(ref esperaInicioReta, btnPolilinha, "Clique no local do ponto inicial das retas:");
             polilinha = true;
-            esperaInicioReta = true;
-
-            stMensagem.Items[1].Text = "Clique no local do ponto inicial das retas:";
         }
 
         private void btnCor_Click(object sender, EventArgs e)
@@ -220,6 +198,7 @@ namespace InfinityPaint
             {
                 polilinha     = false;
                 esperaFimReta = false;
+                btnPolilinha.BackColor = SystemColors.Control;
             }
         }
 
@@ -268,6 +247,29 @@ namespace InfinityPaint
             }
         }
 
+        private void BtnConfig(ref bool boolEspera, ToolStripButton btnAtual, string mensagem)
+        {
+            if (!boolEspera)
+            {
+                limparEsperas();
+                boolEspera = true;
+                btnAtual.BackColor = SystemColors.ButtonShadow;
+                stMensagem.Items[1].Text = "";
+
+                if (btnAtivado != null)
+                    btnAtivado.BackColor = SystemColors.Control;
+
+                btnAtivado = btnAtual;
+            }
+            else
+            {
+                boolEspera = false;
+                btnAtual.BackColor = SystemColors.Control;
+                stMensagem.Items[1].Text = mensagem;
+                btnAtivado = null;
+            }
+        }
+
         private void EsperaPonto()
         {
             esperaPonto = false;
@@ -277,7 +279,7 @@ namespace InfinityPaint
             figuras.InserirAposFim(new NoLista<Ponto>(novoPonto, null));
             novoPonto.desenhar(novoPonto.Cor, pbAreaDesenho.CreateGraphics());
 
-            if(!figurasDesfeitas.EstaVazia) ResetarFigurasDesfeitas();
+            if (!figurasDesfeitas.EstaVazia) ResetarFigurasDesfeitas();
 
             stMensagem.Items[1].Text = "";
         }
@@ -314,6 +316,9 @@ namespace InfinityPaint
 
             figuras.InserirAposFim(new NoLista<Ponto>(novaLinha, null));
             novaLinha.desenhar(novaLinha.Cor, pbAreaDesenho.CreateGraphics());
+
+            /*if (btnReta.BackColor != SystemColors.Control) 
+                btnReta.BackColor = SystemColors.Control;*/
 
             if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
         }
