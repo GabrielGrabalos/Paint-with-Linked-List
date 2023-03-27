@@ -5,6 +5,12 @@ class Reta : Ponto
 {
     private Ponto pontoFinal;
 
+    public Ponto PontoFinal
+    {
+        get { return pontoFinal; } 
+        set { pontoFinal = value; }
+    }
+    
     public Reta(int x1, int y1, int x2, int y2, Color novaCor, int espessura) : base(x1, y1, novaCor, espessura)
     {
         pontoFinal = new Ponto(x2, y2, novaCor, espessura);

@@ -32,7 +32,7 @@ namespace InfinityPaint
         private static Ponto p2 = new Ponto(0, 0, Color.Black, 1); // Ponto temporário.
 
         ToolStripButton btnAtivado = null;
-        CaixaDeEdicao caixaDeEdicao;
+        CaixaDeEdicao caixaDeEdicao;// = new CaixaDeEdicao(10, 10, 100, 100, null);
 
         // Tratadores de evento:
 
@@ -196,58 +196,7 @@ namespace InfinityPaint
 
                 if (drag)
                 {
-                    switch (editando)
-                    {
-                        case "N":
-                            caixaDeEdicao.Altura = caixaDeEdicao.Altura - (e.Y - caixaDeEdicao.Y);
-                            caixaDeEdicao.Y = e.Y;
-                            break;
-                        case "S":
-                            caixaDeEdicao.Altura = e.Y - caixaDeEdicao.Y;
-                            break;
-                        case "E":
-                            caixaDeEdicao.Largura = e.X - caixaDeEdicao.X;
-                            break;
-                        case "W":
-                            caixaDeEdicao.Largura = caixaDeEdicao.Largura - (e.X - caixaDeEdicao.X);
-                            caixaDeEdicao.X = e.X;
-                            break;
-                        case "NE":
-                            caixaDeEdicao.Altura = caixaDeEdicao.Altura - (e.Y - caixaDeEdicao.Y);
-                            caixaDeEdicao.Y = e.Y;
-                            caixaDeEdicao.Largura = e.X - caixaDeEdicao.X;
-                            break;
-                        case "NW":
-                            caixaDeEdicao.Altura = caixaDeEdicao.Altura - (e.Y - caixaDeEdicao.Y);
-                            caixaDeEdicao.Largura = caixaDeEdicao.Largura - (e.X - caixaDeEdicao.X);
-                            caixaDeEdicao.X = e.X;
-                            caixaDeEdicao.Y = e.Y;
-                            break;
-                        case "SE":
-                            caixaDeEdicao.Altura = e.Y - caixaDeEdicao.Y;
-                            caixaDeEdicao.Largura = e.X - caixaDeEdicao.X;
-                            break;
-                        case "SW":
-                            caixaDeEdicao.Altura = e.Y - caixaDeEdicao.Y;
-                            caixaDeEdicao.Largura = caixaDeEdicao.Largura - (e.X - caixaDeEdicao.X);
-                            caixaDeEdicao.X = e.X;
-                            break;
-                        case "C":
-                            caixaDeEdicao.X = e.X - (caixaDeEdicao.Largura / 2);
-                            caixaDeEdicao.Y = e.Y - (caixaDeEdicao.Altura / 2);
-                            break;
-                    }
-
-                    if(caixaDeEdicao.Altura <4)
-                    {
-                        caixaDeEdicao.Altura = 4;
-                    }
-                    if (caixaDeEdicao.Largura < 4)
-                    { 
-                        caixaDeEdicao.Largura = 4;
-                    }
-
-
+                    caixaDeEdicao.Move(editando, e.X, e.Y);
                     pbAreaDesenho.Invalidate();
                 }
             }
@@ -294,6 +243,22 @@ namespace InfinityPaint
             else if (esperaFimRetangulo)
             {
                 EsperaFimRetangulo();
+            }
+            else if (caixaDeEdicao != null)
+            {
+                if (caixaDeEdicao.IsHovering(e.X, e.Y) == "")
+                {
+                    figuras.InserirAposFim(new NoLista<Ponto>(caixaDeEdicao.FiguraInterna, null));
+                    caixaDeEdicao.FiguraInterna.desenhar(caixaDeEdicao.FiguraInterna.Cor, pbAreaDesenho.CreateGraphics());
+
+                    btnAtivado.BackColor = SystemColors.Control;
+
+                    if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
+
+                    caixaDeEdicao = null;
+
+                    pbAreaDesenho.Invalidate();
+                }
             }
         }
 
@@ -455,12 +420,8 @@ namespace InfinityPaint
 
             Circulo novoCirculo = new Circulo(p1.X, p1.Y, raio, p1.Cor, espessura);
 
-            figuras.InserirAposFim(new NoLista<Ponto>(novoCirculo, null));
-            novoCirculo.desenhar(novoCirculo.Cor, pbAreaDesenho.CreateGraphics());
-
-            btnAtivado.BackColor = SystemColors.Control;
-
-            if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
+            caixaDeEdicao = new CaixaDeEdicao(novoCirculo.X - novoCirculo.Raio, novoCirculo.Y - novoCirculo.Raio, novoCirculo.Raio * 2, novoCirculo.Raio * 2, novoCirculo);
+            caixaDeEdicao.desenhar(corAtual, pbAreaDesenho.CreateGraphics());
         }
 
         private void EsperaInicioElipse()
@@ -793,8 +754,6 @@ namespace InfinityPaint
             if(this.Cursor != Cursors.Default)
             {
                 drag = true;
-                mouseAntX = e.X;
-                mouseAntY = e.Y;
 
                 editando = caixaDeEdicao.IsHovering(e.X, e.Y);
             }

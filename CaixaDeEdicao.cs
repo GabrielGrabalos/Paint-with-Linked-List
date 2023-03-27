@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.Devices;
 using System.Drawing;
+using System.Security.Cryptography.X509Certificates;
 
 namespace InfinityPaint
 {
@@ -28,12 +30,14 @@ namespace InfinityPaint
 
         public override void desenhar(Color cor, Graphics g)
         {
-            figuraInterna.desenhar(cor, g);
+            if (figuraInterna != null)
+                figuraInterna.desenhar(cor, g);
 
             g.DrawRectangle(new Pen(Cor), X, Y, Largura, Altura);
 
             // Draws squares in the corners
             g.FillRectangle(new SolidBrush(Cor), X - 2, Y - 2, 5, 5);
+
             g.FillRectangle(new SolidBrush(Cor), X + Largura - 2, Y - 2, 5, 5);
             g.FillRectangle(new SolidBrush(Cor), X - 2, Y + Altura - 2, 5, 5);
             g.FillRectangle(new SolidBrush(Cor), X + Largura - 2, Y + Altura - 2, 5, 5);
@@ -48,7 +52,7 @@ namespace InfinityPaint
         public string IsHovering(int x, int y)
         {
             const int interval = 4;
-            
+
             // Top left corner
             if (x >= X - interval && x <= X + interval && y >= Y - interval && y <= Y + interval)
                 return "NW";
@@ -80,55 +84,141 @@ namespace InfinityPaint
             return "";
         }
 
-        internal void Move(string direction, int deltaX, int deltaY)
+        internal void Move(string direction, int mouseX, int mouseY)
         {
-            if (direction == "N")
+            switch (direction)
             {
-                Y += deltaY;
-                Altura -= deltaY;
+                case "N":
+
+                    Altura = Altura - (mouseY - Y);
+
+                    if (Altura >= 4)
+                        Y = mouseY;
+
+                    break;
+
+                case "S":
+
+                    Altura = mouseY - Y;
+
+                    break;
+
+                case "E":
+
+                    Largura = mouseX - X;
+
+                    break;
+
+                case "W":
+
+                    Largura = Largura - (mouseX - X);
+
+                    if (Largura >= 4)
+                        X = mouseX;
+
+                    break;
+
+                case "NE":
+
+                    Altura = Altura - (mouseY - Y);
+                    if (Altura >= 4)
+                        Y = mouseY;
+                    Largura = mouseX - X;
+
+                    break;
+
+                case "NW":
+
+                    Altura = Altura - (mouseY - Y);
+                    Largura = Largura - (mouseX - X);
+
+                    if (Largura >= 4)
+                        X = mouseX;
+
+                    if (Altura >= 4)
+                        Y = mouseY;
+
+                    break;
+
+                case "SE":
+
+                    Altura = mouseY - Y;
+                    Largura = mouseX - X;
+
+                    break;
+
+                case "SW":
+
+                    Altura = mouseY - Y;
+                    Largura = Largura - (mouseX - X);
+
+                    if (Largura >= 4)
+                        X = mouseX;
+
+                    break;
+
+                case "C":
+                    X = mouseX - (Largura / 2);
+                    Y = mouseY - (Altura / 2);
+
+                    break;
             }
-            else if (direction == "NW")
+
+            if (Altura < 4)
             {
-                X += deltaX;
-                Y += deltaY;
-                Largura -= deltaX;
-                Altura -= deltaY;
+                Altura = 4;
             }
-            else if (direction == "NE")
+            if (Largura < 4)
             {
-                Y += deltaY;
-                Largura += deltaX;
-                Altura -= deltaY;
+                Largura = 4;
             }
-            else if (direction == "W")
+
+            if (figuraInterna != null)
+                AtualizarFiguraInterna(direction);
+        }
+
+        private void AtualizarFiguraInterna(string direction)
+        {
+            var figuraType = figuraInterna.GetType();
+
+            if (figuraType == typeof(Retangulo))
             {
-                X += deltaX;
-                Largura -= deltaX;
+                var retangulo = (Retangulo)figuraInterna;
+                retangulo.Largura = Largura;
+                retangulo.Altura = Altura;
+                retangulo.X = X;
+                retangulo.Y = Y;
             }
-            else if (direction == "E")
+            else if (figuraType == typeof(Circulo))
             {
-                Largura += deltaX;
+                var circulo = (Circulo)figuraInterna;
+                if (direction == "W" || direction == "E")
+                    Altura = Largura;
+                else
+                    Largura = Altura;
+
+
+                if (direction != "C")
+                {
+                    X = circulo.X - (Largura / 2);
+                    Y = circulo.Y - (Altura / 2);
+                }
+                else
+                {
+                    circulo.X = X + (Largura / 2);
+                    circulo.Y = Y + (Altura / 2);
+                }
+
+                circulo.Raio = Largura / 2;
             }
-            else if (direction == "SW")
+            else if (figuraType == typeof(Reta))
             {
-                X += deltaX;
-                Largura -= deltaX;
-                Altura += deltaY;
+                var linha = (Reta)figuraInterna;
+                linha.X = X;
+                linha.Y = Y;
+                linha.PontoFinal.X = Largura;
+                linha.PontoFinal.Y = Altura;
             }
-            else if (direction == "S")
-            {
-                Altura += deltaY;
-            }
-            else if (direction == "SE")
-            {
-                Largura += deltaX;
-                Altura += deltaY;
-            }
-            else if (direction == "C")
-            {
-                X += deltaX;
-                Y += deltaY;
-            }  
         }
     }
 }
