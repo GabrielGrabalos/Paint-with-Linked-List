@@ -32,7 +32,7 @@ class Retangulo : Ponto
 
     public override String ToString()
     {
-        return transformaString("ret", 5) +
+        return transformaString("r", 5) +
         transformaString(X, 5) +
         transformaString(Y, 5) +
         transformaString(Cor.R, 5) +

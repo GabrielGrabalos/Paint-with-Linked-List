@@ -42,7 +42,7 @@ class Reta : Ponto
     }
     public override String ToString()
     {
-        return transformaString("r", 5) +
+        return transformaString("l", 5) +
         transformaString(X, 5) +
         transformaString(Y, 5) +
         transformaString(Cor.R, 5) +

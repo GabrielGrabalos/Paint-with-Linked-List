@@ -248,18 +248,28 @@ namespace InfinityPaint
             {
                 if (caixaDeEdicao.IsHovering(e.X, e.Y) == "")
                 {
-                    figuras.InserirAposFim(new NoLista<Ponto>(caixaDeEdicao.FiguraInterna, null));
-                    caixaDeEdicao.FiguraInterna.desenhar(caixaDeEdicao.FiguraInterna.Cor, pbAreaDesenho.CreateGraphics());
-
-                    btnAtivado.BackColor = SystemColors.Control;
-
-                    if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
-
-                    caixaDeEdicao = null;
-
-                    pbAreaDesenho.Invalidate();
+                    ConfirmarCaixaDeEdicao();
                 }
             }
+        }
+
+        private void ConfirmarCaixaDeEdicao()
+        {
+            figuras.InserirAposFim(new NoLista<Ponto>(caixaDeEdicao.FiguraInterna, null));
+            caixaDeEdicao.FiguraInterna.desenhar(caixaDeEdicao.FiguraInterna.Cor, pbAreaDesenho.CreateGraphics());
+
+            btnAtivado.BackColor = SystemColors.Control;
+
+            if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
+
+            caixaDeEdicao = null;
+
+            if (Cursor != Cursors.Default)
+            {
+                Cursor = Cursors.Default;
+            }
+
+            pbAreaDesenho.Invalidate();
         }
 
         private void pbAreaDesenho_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -340,6 +350,11 @@ namespace InfinityPaint
                 stMensagem.Items[1].Text = mensagem;
                 btnAtivado = null;
             }
+
+            if (caixaDeEdicao != null)
+            {
+                ConfirmarCaixaDeEdicao();
+            }
         }
 
         private void EsperaPonto()
@@ -396,6 +411,8 @@ namespace InfinityPaint
             btnAtivado.BackColor = SystemColors.Control;
 
             if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
+
+            pbAreaDesenho.Invalidate();
         }
 
         private void EsperaInicioCirculo()
@@ -448,12 +465,8 @@ namespace InfinityPaint
 
             Elipse novaElipse = new Elipse(p1.X, p1.Y, raio1, raio2, p1.Cor, espessura);
 
-            figuras.InserirAposFim(new NoLista<Ponto>(novaElipse, null));
-            novaElipse.desenhar(novaElipse.Cor, pbAreaDesenho.CreateGraphics());
-
-            btnAtivado.BackColor = SystemColors.Control;
-
-            if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
+            caixaDeEdicao = new CaixaDeEdicao(novaElipse.X - novaElipse.Raio1, novaElipse.Y - novaElipse.Raio2, novaElipse.Raio1 * 2, novaElipse.Raio2 * 2, novaElipse);
+            caixaDeEdicao.desenhar(corAtual, pbAreaDesenho.CreateGraphics());
         }
 
         private void EsperaInicioRetangulo()
@@ -503,12 +516,8 @@ namespace InfinityPaint
 
             Retangulo novoRetangulo = new Retangulo(x1, y1, largura, altura, p1.Cor, espessura);
 
-            figuras.InserirAposFim(new NoLista<Ponto>(novoRetangulo, null));
-            novoRetangulo.desenhar(novoRetangulo.Cor, pbAreaDesenho.CreateGraphics());
-
-            btnAtivado.BackColor = SystemColors.Control;
-
-            if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
+            caixaDeEdicao = new CaixaDeEdicao(novoRetangulo.X, novoRetangulo.Y, novoRetangulo.Largura, novoRetangulo.Altura, novoRetangulo);
+            caixaDeEdicao.desenhar(corAtual, pbAreaDesenho.CreateGraphics());
         }
 
         private void DesenharFiguras(Graphics g)
@@ -751,7 +760,7 @@ namespace InfinityPaint
 
         private void pbAreaDesenho_MouseDown(object sender, MouseEventArgs e)
         {
-            if(this.Cursor != Cursors.Default)
+            if (caixaDeEdicao != null)
             {
                 drag = true;
 

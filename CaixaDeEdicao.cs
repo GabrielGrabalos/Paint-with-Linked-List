@@ -31,7 +31,7 @@ namespace InfinityPaint
         public override void desenhar(Color cor, Graphics g)
         {
             if (figuraInterna != null)
-                figuraInterna.desenhar(cor, g);
+                figuraInterna.desenhar(figuraInterna.Cor, g);
 
             g.DrawRectangle(new Pen(Cor), X, Y, Largura, Altura);
 
@@ -211,13 +211,13 @@ namespace InfinityPaint
 
                 circulo.Raio = Largura / 2;
             }
-            else if (figuraType == typeof(Reta))
+            else if (figuraType == typeof(Elipse))
             {
-                var linha = (Reta)figuraInterna;
-                linha.X = X;
-                linha.Y = Y;
-                linha.PontoFinal.X = Largura;
-                linha.PontoFinal.Y = Altura;
+                var elipse = (Elipse)figuraInterna;
+                elipse.Raio1 = Largura / 2;
+                elipse.Raio2 = Altura / 2;
+                elipse.X = X + elipse.Raio1;
+                elipse.Y = Y + elipse.Raio2;
             }
         }
     }
