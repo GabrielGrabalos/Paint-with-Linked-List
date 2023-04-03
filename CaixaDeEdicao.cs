@@ -84,93 +84,48 @@ namespace InfinityPaint
             return "";
         }
 
-        internal void Move(string direction, int mouseX, int mouseY)
+        public void Move(string direction, int mouseX, int mouseY)
         {
             switch (direction)
             {
-                case "N":
-
-                    Altura = Altura - (mouseY - Y);
-
-                    if (Altura >= 4)
-                        Y = mouseY;
-
-                    break;
-
-                case "S":
-
-                    Altura = mouseY - Y;
-
-                    break;
-
-                case "E":
-
-                    Largura = mouseX - X;
-
-                    break;
-
-                case "W":
-
-                    Largura = Largura - (mouseX - X);
-
-                    if (Largura >= 4)
-                        X = mouseX;
-
-                    break;
-
-                case "NE":
-
-                    Altura = Altura - (mouseY - Y);
-                    if (Altura >= 4)
-                        Y = mouseY;
-                    Largura = mouseX - X;
-
-                    break;
-
                 case "NW":
-
-                    Altura = Altura - (mouseY - Y);
-                    Largura = Largura - (mouseX - X);
-
-                    if (Largura >= 4)
-                        X = mouseX;
-
-                    if (Altura >= 4)
-                        Y = mouseY;
-
+                    Largura = X + Largura - mouseX;
+                    Altura = Y + Altura - mouseY;
+                    X = mouseX;
+                    Y = mouseY;
                     break;
-
-                case "SE":
-
-                    Altura = mouseY - Y;
+                case "N":
+                    Altura = Y + Altura - mouseY;
+                    Y = mouseY;
+                    break;
+                case "NE":
                     Largura = mouseX - X;
-
+                    Altura = Y + Altura - mouseY;
+                    Y = mouseY;
                     break;
-
+                case "W":
+                    Largura = X + Largura - mouseX;
+                    X = mouseX;
+                    break;
+                case "E":
+                    Largura = mouseX - X;
+                    break;
                 case "SW":
-
+                    Largura = X + Largura - mouseX;
                     Altura = mouseY - Y;
-                    Largura = Largura - (mouseX - X);
-
-                    if (Largura >= 4)
-                        X = mouseX;
-
+                    X = mouseX;
                     break;
-
+                case "S":
+                    Altura = mouseY - Y;
+                    break;
+                case "SE":
+                    Largura = mouseX - X;
+                    Altura = mouseY - Y;
+                    break;
                 case "C":
-                    X = mouseX - (Largura / 2);
-                    Y = mouseY - (Altura / 2);
-
+                    X = mouseX;
+                    Y = mouseY;
                     break;
-            }
-
-            if (Altura < 4)
-            {
-                Altura = 4;
-            }
-            if (Largura < 4)
-            {
-                Largura = 4;
             }
 
             if (figuraInterna != null)
@@ -188,6 +143,17 @@ namespace InfinityPaint
                 retangulo.Altura = Altura;
                 retangulo.X = X;
                 retangulo.Y = Y;
+
+                if (Altura < 0)
+                {
+                    retangulo.Altura *= -1;
+                    retangulo.Y -= retangulo.Altura;
+                }
+                if (Largura < 0)
+                {
+                    retangulo.Largura *= -1;
+                    retangulo.X -= retangulo.Largura;
+                }
             }
             else if (figuraType == typeof(Circulo))
             {

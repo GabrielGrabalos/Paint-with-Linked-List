@@ -155,6 +155,11 @@ namespace InfinityPaint
             {
                 string estadoSeta = caixaDeEdicao.IsHovering(e.X, e.Y);
 
+                if(editando != "")
+                {
+                    estadoSeta = editando;
+                }
+
                 if (estadoSeta != "")
                 {
                     switch (estadoSeta)
@@ -246,7 +251,7 @@ namespace InfinityPaint
             }
             else if (caixaDeEdicao != null)
             {
-                if (caixaDeEdicao.IsHovering(e.X, e.Y) == "")
+                if (editando == "")
                 {
                     ConfirmarCaixaDeEdicao();
                 }
