@@ -24,7 +24,7 @@ class Ponto : IComparable<Ponto>
     public virtual void desenhar(Color cor, Graphics g)
     {
         var brush = new SolidBrush(cor);
-        g.FillEllipse(brush, x - espessura / 2, y - espessura / 2, espessura, espessura);
+        g.FillEllipse(brush, x - (espessura + 1) / 2, y - (espessura + 1) / 2, (espessura + 1), (espessura + 1));
     }
 
     public int CompareTo(Ponto other)

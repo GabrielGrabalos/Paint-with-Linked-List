@@ -30,10 +30,7 @@ namespace InfinityPaint
 
         public override void desenhar(Color cor, Graphics g)
         {
-            if (figuraInterna != null)
-                figuraInterna.desenhar(figuraInterna.Cor, g);
-
-            g.DrawRectangle(new Pen(Cor), X, Y, Largura, Altura);
+            figuraInterna?.desenhar(figuraInterna.Cor, g);
 
             // Draws squares in the corners
             g.FillRectangle(new SolidBrush(Cor), X - 2, Y - 2, 5, 5);
@@ -123,8 +120,8 @@ namespace InfinityPaint
                     Altura = mouseY - Y;
                     break;
                 case "C":
-                    X = mouseX;
-                    Y = mouseY;
+                    X = mouseX - Largura / 2;
+                    Y = mouseY - Altura / 2;
                     break;
             }
 
@@ -184,6 +181,14 @@ namespace InfinityPaint
                 elipse.Raio2 = Altura / 2;
                 elipse.X = X + elipse.Raio1;
                 elipse.Y = Y + elipse.Raio2;
+            }
+            else // Reta
+            {
+                var reta = (Reta)figuraInterna;
+                reta.X = X;
+                reta.Y = Y;
+                reta.PontoFinal.X = X + Largura;
+                reta.PontoFinal.Y = Y + Altura;
             }
         }
     }

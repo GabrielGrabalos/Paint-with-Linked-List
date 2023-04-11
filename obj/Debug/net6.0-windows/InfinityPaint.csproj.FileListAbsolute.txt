@@ -20,6 +20,7 @@ C:\Users\u22131\source\repos\InfinityPaint\bin\Debug\net6.0-windows\InfinityPain
 C:\Users\u22131\source\repos\InfinityPaint\bin\Debug\net6.0-windows\InfinityPaint.exe
 C:\Users\u22131\source\repos\InfinityPaint\bin\Debug\net6.0-windows\InfinityPaint.deps.json
 C:\Users\u22131\source\repos\InfinityPaint\bin\Debug\net6.0-windows\InfinityPaint.runtimeconfig.json
+C:\Users\u22131\source\repos\InfinityPaint\bin\Debug\net6.0-windows\InfinityPaint.pdb
 C:\Users\u22131\source\repos\InfinityPaint\obj\Debug\net6.0-windows\InfinityPaint.csproj.AssemblyReference.cache
 C:\Users\u22131\source\repos\InfinityPaint\obj\Debug\net6.0-windows\InfinityPaint.frmGrafico.resources
 C:\Users\u22131\source\repos\InfinityPaint\obj\Debug\net6.0-windows\InfinityPaint.Properties.Resources.resources
@@ -32,5 +33,4 @@ C:\Users\u22131\source\repos\InfinityPaint\obj\Debug\net6.0-windows\InfinityPain
 C:\Users\u22131\source\repos\InfinityPaint\obj\Debug\net6.0-windows\refint\InfinityPaint.dll
 C:\Users\u22131\source\repos\InfinityPaint\obj\Debug\net6.0-windows\InfinityPaint.pdb
 C:\Users\u22131\source\repos\InfinityPaint\obj\Debug\net6.0-windows\InfinityPaint.genruntimeconfig.cache
-C:\Users\u22131\source\repos\InfinityPaint\bin\Debug\net6.0-windows\InfinityPaint.pdb
 C:\Users\u22131\source\repos\InfinityPaint\obj\Debug\net6.0-windows\ref\InfinityPaint.dll

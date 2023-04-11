@@ -31,6 +31,8 @@ namespace InfinityPaint
         private static Ponto p1 = new Ponto(0, 0, Color.Black, 1);
         private static Ponto p2 = new Ponto(0, 0, Color.Black, 1); // Ponto temporário.
 
+        Polilinha umaPolilinha = null;
+
         ToolStripButton btnAtivado = null;
         CaixaDeEdicao caixaDeEdicao;// = new CaixaDeEdicao(10, 10, 100, 100, null);
 
@@ -39,7 +41,6 @@ namespace InfinityPaint
         public frmGrafico()
         {
             InitializeComponent();
-            pbAreaDesenho.KeyPress += new KeyPressEventHandler(pbAreaDesenho_KeyPress);
         }
 
         // Eventos click (em ordem):
@@ -94,7 +95,15 @@ namespace InfinityPaint
         {
             esperaInicioReta = false;
             BtnConfig(ref esperaInicioReta, btnPolilinha, "Clique no local do ponto inicial das retas:");
-            polilinha = true;
+            if (umaPolilinha == null)
+            {
+                umaPolilinha = new Polilinha(p1.X, p1.Y, corAtual, espessura);
+                figuras.InserirAposFim(umaPolilinha);
+            }
+            else
+            {
+                umaPolilinha = null;
+            }
         }
 
         private void btnCor_Click(object sender, EventArgs e)
@@ -198,7 +207,6 @@ namespace InfinityPaint
                     this.Cursor = Cursors.Default;
                 }
 
-
                 if (drag)
                 {
                     caixaDeEdicao.Move(editando, e.X, e.Y);
@@ -264,6 +272,7 @@ namespace InfinityPaint
             caixaDeEdicao.FiguraInterna.desenhar(caixaDeEdicao.FiguraInterna.Cor, pbAreaDesenho.CreateGraphics());
 
             btnAtivado.BackColor = SystemColors.Control;
+            btnAtivado = null;
 
             if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
 
@@ -279,20 +288,15 @@ namespace InfinityPaint
 
         private void pbAreaDesenho_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (polilinha)
+            if (umaPolilinha != null)
             {
-                polilinha     = false;
+                umaPolilinha.adicionarPonto(new Ponto(e.X, e.Y, corAtual, espessura));
+                umaPolilinha  = null;
                 esperaFimReta = false;
                 btnPolilinha.BackColor = SystemColors.Control;
-            }
-        }
 
-        // Evento KeyPress (pbAreaDesenhos):
-        private void pbAreaDesenho_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (polilinha && (Keys)e.KeyChar == Keys.Enter)
-            {
-                polilinha = false;
+                if (!btnDesfazer.Enabled)
+                    btnDesfazer.Enabled = true;
             }
         }
 
@@ -315,10 +319,10 @@ namespace InfinityPaint
             esperaFimElipse       = false;
             esperaInicioRetangulo = false;
             esperaFimRetangulo    = false;
-            polilinha             = false;
             drag                  = false;
 
             editando = "";
+            umaPolilinha = null;
         }
 
         private void AtualizarP2(int mouseX, int mouseY)
@@ -389,6 +393,11 @@ namespace InfinityPaint
             p1.Y = p2.Y;
             p1.Cor = corAtual;
 
+            if(umaPolilinha != null)
+            {
+                umaPolilinha.adicionarPonto(new Ponto(p1.X, p1.Y, corAtual, espessura));
+            }
+
             if (!figurasDesfeitas.EstaVazia) ResetarFigurasDesfeitas();
 
             stMensagem.Items[1].Text = "Mensagem: clique o ponto final da reta";
@@ -398,24 +407,34 @@ namespace InfinityPaint
         {
             esperaInicioReta = false;
 
-            Reta novaLinha = new Reta(p1.X, p1.Y, p2.X, p2.Y, corAtual, espessura);
 
-            if (polilinha)
+            if (umaPolilinha != null)
             {
-                p1.X = p2.X;
-                p1.Y = p2.Y;
+                if (!umaPolilinha.Pontos.EstaVazia)
+                {
+                    p1.X = p2.X;
+                    p1.Y = p2.Y;
+                }
+
+                umaPolilinha.adicionarPonto(new Ponto(p1.X, p1.Y, corAtual, espessura));
             }
             else
             {
                 esperaFimReta = false;
+
+                Reta novaLinha = new Reta(p1.X, p1.Y, p2.X, p2.Y, corAtual, espessura);
+
+                caixaDeEdicao = new CaixaDeEdicao(novaLinha.X, novaLinha.Y, 
+                                                  Math.Abs(novaLinha.X - novaLinha.PontoFinal.X), 
+                                                  Math.Abs(novaLinha.Y - novaLinha.PontoFinal.Y), 
+                                                  novaLinha);
+
+                caixaDeEdicao.desenhar(corAtual, pbAreaDesenho.CreateGraphics());
+
+                btnAtivado.BackColor = SystemColors.Control;
+
+                if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
             }
-
-            figuras.InserirAposFim(new NoLista<Ponto>(novaLinha, null));
-            novaLinha.desenhar(novaLinha.Cor, pbAreaDesenho.CreateGraphics());
-
-            btnAtivado.BackColor = SystemColors.Control;
-
-            if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
 
             pbAreaDesenho.Invalidate();
         }
@@ -540,13 +559,13 @@ namespace InfinityPaint
 
             if (esperaFimReta)
             {
-                Pen pen = new Pen(p1.Cor, espessura);
+                Pen pen = new Pen(corAtual, espessura);
 
                 g.DrawLine(pen, p1.X, p1.Y, p2.X, p2.Y);
             }
             else if (esperaFimCirculo)
             {
-                Pen pen = new Pen(p1.Cor, espessura);
+                Pen pen = new Pen(corAtual, espessura);
 
                 int raio = (int)Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
 
@@ -555,7 +574,7 @@ namespace InfinityPaint
             }
             else if (esperaFimElipse)
             {
-                Pen pen = new Pen(p1.Cor, espessura);
+                Pen pen = new Pen(corAtual, espessura);
 
                 int raio1 = Math.Abs(p1.X - p2.X);
                 int raio2 = Math.Abs(p1.Y - p2.Y);
@@ -565,7 +584,7 @@ namespace InfinityPaint
             }
             else if (esperaFimRetangulo)
             {
-                Pen pen = new Pen(p1.Cor, espessura);
+                Pen pen = new Pen(corAtual, espessura);
 
                 int largura = Math.Abs(p2.X - p1.X);
                 int altura = Math.Abs(p2.Y - p1.Y);
@@ -719,6 +738,34 @@ namespace InfinityPaint
                             new Retangulo(xBase, yBase, largura, altura, cor, esp), null));
 
                             break;
+
+                        // Polilinha:
+                        case 'i':
+                            int numPontos = Convert.ToInt32(linha.Substring(30, 5).Trim());
+
+                            Polilinha poli = new Polilinha(0, 0, cor, esp);
+                            poli.adicionarPonto(new Ponto(xBase, yBase, cor, esp));
+
+                            for (int i = 0; i < numPontos; i++)
+                            {
+                                if((linha = arqFiguras.ReadLine()) == null) break;
+
+                                int x = Convert.ToInt32(linha.Substring( 5, 5).Trim());
+                                int y = Convert.ToInt32(linha.Substring( 10, 5).Trim());
+
+                                int r = Convert.ToInt32(linha.Substring(15, 5).Trim());
+                                int g = Convert.ToInt32(linha.Substring(20, 5).Trim());
+                                int b = Convert.ToInt32(linha.Substring(25, 5).Trim());
+                                esp = Convert.ToInt32(linha.Substring(40, 5).Trim());
+
+                                cor = Color.FromArgb(255, r, g, b);
+
+                                poli.adicionarPonto(new Ponto(x, y, cor, esp));
+                            }
+
+                            figuras.InserirAposFim(new NoLista<Ponto>(poli, null));
+
+                            break;
                     }
                 }
 
@@ -743,6 +790,10 @@ namespace InfinityPaint
                 if (figuras.EstaVazia) btnDesfazer.Enabled = false;
 
                 if (!btnRefazer.Enabled) btnRefazer.Enabled = true;
+
+                limparEsperas();
+                if (btnAtivado != null)
+                    btnAtivado.BackColor = SystemColors.Control;
             }
         }
 
@@ -755,6 +806,10 @@ namespace InfinityPaint
             if (figurasDesfeitas.EstaVazia) btnRefazer.Enabled = false;
 
             if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;
+
+            limparEsperas();
+            if (btnAtivado != null)
+                btnAtivado.BackColor = SystemColors.Control;
         }
 
         private void ResetarFigurasDesfeitas()
