@@ -125,10 +125,7 @@ namespace InfinityPaint
         // Criar polilinha:
         private void btnPolilinha_Click(object sender, EventArgs e)
         {
-            esperaInicioReta = false; // Para correta configuração do botão, desativa
-                                      // a espera da reta, a qual será reativada.
-                                      
-            BtnConfig(ref esperaInicioReta, 
+            BtnConfig(ref esperaInicioReta, // umaPolilinha == null
                           btnPolilinha, 
                           "Clique no local do ponto inicial " +
                           "das retas (clique duplo para finalizar):");
@@ -759,10 +756,6 @@ namespace InfinityPaint
 
         private void DesenharFiguras(Graphics g)
         {
-            // Desenha a caixa de edição, caso haja uma:
-            caixaDeEdicao?.desenhar(caixaDeEdicao.Cor, g);
-
-
             // Percorre a lista de figuras e desenha todas as figuras ali presentes:
             figuras.iniciarPercursoSequencial();
 
@@ -772,8 +765,11 @@ namespace InfinityPaint
                 figuraAtual.desenhar(figuraAtual.Cor, g);
             }
 
+            // Desenha a caixa de edição, caso haja uma:
+            caixaDeEdicao?.desenhar(caixaDeEdicao.Cor, g);
 
             // Desenha a pré visualizaçãodas figuras a serem desenhadas:
+
             Pen pen = new Pen(corAtual, espessura);
 
             if (esperaFimReta)
@@ -957,6 +953,8 @@ namespace InfinityPaint
                             break;
                     }
                 }
+
+                salvo = true;
 
                 arqFiguras.Close();
                 this.Text = dlgAbrir.FileName;

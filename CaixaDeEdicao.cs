@@ -203,10 +203,44 @@ namespace InfinityPaint
             else // Reta
             {
                 var reta = (Reta)figuraInterna;
-                reta.X = X;
-                reta.Y = Y;
-                reta.PontoFinal.X = X + Largura;
-                reta.PontoFinal.Y = Y + Altura;
+                
+                if (reta.X < reta.PontoFinal.X)
+                {
+                    reta.X = X;
+
+                    if (Largura > 0)
+                        reta.PontoFinal.X = X - Largura;
+                    else
+                        reta.PontoFinal.X = X + Largura;
+                }
+                else
+                {
+                    if (Largura > 0)
+                        reta.X = X - Largura;
+                    else
+                        reta.X = X + Largura;
+
+                    reta.PontoFinal.X = X;
+                }
+                
+                if (reta.Y < reta.PontoFinal.Y)
+                {
+                    reta.Y = Y;
+
+                    if (Altura > 0)
+                        reta.PontoFinal.Y = Y - Altura;
+                    else
+                        reta.PontoFinal.Y = Y + Altura;
+                }
+                else
+                {
+                    if (Altura > 0)
+                        reta.Y = Y - Altura;
+                    else
+                        reta.Y = Y + Altura;
+
+                    reta.PontoFinal.Y = Y;
+                }
             }
         }
     }
