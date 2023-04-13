@@ -311,7 +311,7 @@
             this.tbEspessura.Enabled = false;
             this.tbEspessura.Name = "tbEspessura";
             this.tbEspessura.Size = new System.Drawing.Size(80, 44);
-            this.tbEspessura.Text = "Espessura: 1";
+            this.tbEspessura.Text = "Espessura: 2";
             this.tbEspessura.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbEspessura.ToolTipText = "Espesura da caneta";
             // 

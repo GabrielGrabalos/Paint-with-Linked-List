@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "Z85NGrzlaBp9PHrlcH4udFYgX2COf38V7OIveGi/PSpnzwovOGcVMNrfcEUQf78AN9Rlk5zj+LQHJIXsQITKDg==",
+  "dgSpecHash": "dhM+q527DrLxqh8ASmZ3tal/xWiQR9yDBAoEv8eLz6ogDLFRgG8i5BTBqJaILa5ex1LtTJXTFZpi5BxD7CX1Xg==",
   "success": true,
   "projectFilePath": "C:\\Users\\u22131\\source\\repos\\InfinityPaint\\InfinityPaint.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\u22131\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.15\\microsoft.windowsdesktop.app.ref.6.0.15.nupkg.sha512",
-    "C:\\Users\\u22131\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.15\\microsoft.netcore.app.ref.6.0.15.nupkg.sha512",
-    "C:\\Users\\u22131\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.15\\microsoft.aspnetcore.app.ref.6.0.15.nupkg.sha512",
-    "C:\\Users\\u22131\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.15\\microsoft.netcore.app.host.win-x64.6.0.15.nupkg.sha512"
+    "C:\\Users\\u22131\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.16\\microsoft.windowsdesktop.app.ref.6.0.16.nupkg.sha512",
+    "C:\\Users\\u22131\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.16\\microsoft.netcore.app.ref.6.0.16.nupkg.sha512",
+    "C:\\Users\\u22131\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.16\\microsoft.aspnetcore.app.ref.6.0.16.nupkg.sha512",
+    "C:\\Users\\u22131\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.16\\microsoft.netcore.app.host.win-x64.6.0.16.nupkg.sha512"
   ],
   "logs": []
 }

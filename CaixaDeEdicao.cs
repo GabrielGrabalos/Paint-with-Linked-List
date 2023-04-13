@@ -46,42 +46,60 @@ namespace InfinityPaint
             g.FillRectangle(new SolidBrush(Cor), X + Largura - 2, Y + Altura / 2 - 2, 5, 5);
         }
 
-        public string IsHovering(int x, int y)
+        public string IsMousePorCima(int x, int y)
         {
             const int interval = 4;
+
+            // Top middle
+            if (x >= X + Largura / 2 - interval && x <= X + Largura / 2 + interval && y >= Y - interval && y <= Y + interval)
+                return "N";
+
+            // Middle left
+            if (x >= X - interval && x <= X + interval && y >= Y + Altura / 2 - interval && y <= Y + Altura / 2 + interval)
+                return "W";
+
+            // Middle right
+            if (x >= X + Largura - interval && x <= X + Largura + interval && y >= Y + Altura / 2 - interval && y <= Y + Altura / 2 + interval)
+                return "E";
+
+            // Bottom middle
+            if (x >= X + Largura / 2 - 2 && x <= X + Largura / 2 + 2 && y >= Y + Altura - 2 && y <= Y + Altura + 2)
+                return "S";
 
             // Top left corner
             if (x >= X - interval && x <= X + interval && y >= Y - interval && y <= Y + interval)
                 return "NW";
-            // Top middle
-            if (x >= X + Largura / 2 - interval && x <= X + Largura / 2 + interval && y >= Y - interval && y <= Y + interval)
-                return "N";
+
             // Top right corner
             if (x >= X + Largura - interval && x <= X + Largura + interval && y >= Y - interval && y <= Y + interval)
                 return "NE";
-            // Middle left
-            if (x >= X - interval && x <= X + interval && y >= Y + Altura / 2 - interval && y <= Y + Altura / 2 + interval)
-                return "W";
-            // Middle right
-            if (x >= X + Largura - interval && x <= X + Largura + interval && y >= Y + Altura / 2 - interval && y <= Y + Altura / 2 + interval)
-                return "E";
+
             // Bottom left corner
             if (x >= X - interval && x <= X + interval && y >= Y + Altura - interval && y <= Y + Altura + interval)
                 return "SW";
-            // Bottom middle
-            if (x >= X + Largura / 2 - 2 && x <= X + Largura / 2 + 2 && y >= Y + Altura - 2 && y <= Y + Altura + 2)
-                return "S";
+
             // Bottom right corner
             if (x >= X + Largura - 2 && x <= X + Largura + 2 && y >= Y + Altura - 2 && y <= Y + Altura + 2)
                 return "SE";
+
             // Middle
-            if (x >= X && x <= X + Largura && y >= Y && y <= Y + Altura)
-                return "C";
+            if (Altura > 0 && Largura > 0)
+                if (x >= X && x <= X + Largura && y >= Y && y <= Y + Altura)
+                    return "C";
+            if (Altura < 0 && Largura > 0)
+                if (x >= X && x <= X + Largura && y <= Y && y >= Y + Altura)
+                    return "C";
+            if (Altura > 0 && Largura < 0)
+                if (x <= X && x >= X + Largura && y >= Y && y <= Y + Altura)
+                    return "C";
+            if (Altura < 0 && Largura < 0)
+                if (x <= X && x >= X + Largura && y <= Y && y >= Y + Altura)
+                    return "C";
 
             return "";
         }
 
-        public void Move(string direction, int mouseX, int mouseY)
+        public void Mover(string direction, int mouseX, int mouseY)
         {
             switch (direction)
             {
