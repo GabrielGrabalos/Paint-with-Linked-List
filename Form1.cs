@@ -573,8 +573,8 @@ namespace InfinityPaint
             // Calcula a distância entre o centro do círculo e o cursor:
             int raio = (int)Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
 
-            Circulo novoCirculo = new Circulo(p1.X, p1.Y, raio, p1.Cor, espessura); // Instancia um novo c´rculo, o qual
-                                                                                    // será adicionado a lista de figuras.
+            Circulo novoCirculo = new Circulo(p1.X, p1.Y, raio, corAtual, espessura); // Instancia um novo c´rculo, o qual
+                                                                                      // será adicionado a lista de figuras.
 
             // Cria uma nova caixa de edição com o círculo criado acima:
             caixaDeEdicao = new CaixaDeEdicao(novoCirculo.X - novoCirculo.Raio, 
@@ -609,8 +609,8 @@ namespace InfinityPaint
             int raio1 = Math.Abs(p2.X - p1.X);
             int raio2 = Math.Abs(p2.Y - p1.Y);
 
-            Elipse novaElipse = new Elipse(p1.X, p1.Y, raio1, raio2, p1.Cor, espessura); // Instancia uma nova elipse, a qual
-                                                                                         // será adicionada a lista de figuras.
+            Elipse novaElipse = new Elipse(p1.X, p1.Y, raio1, raio2, corAtual, espessura); // Instancia uma nova elipse, a qual
+                                                                                           // será adicionada a lista de figuras.
 
             // Cria uma nova caixa de edição com a elipse criada acima:
             caixaDeEdicao = new CaixaDeEdicao(novaElipse.X - novaElipse.Raio1, 
@@ -645,7 +645,6 @@ namespace InfinityPaint
             int largura = Math.Abs(p2.X - p1.X);
             int altura  = Math.Abs(p2.Y - p1.Y);
 
-
             // Corrige o retângulo, se necessário:
             int x1, y1;
 
@@ -670,8 +669,8 @@ namespace InfinityPaint
                 y1 = p2.Y;
             }
 
-            Retangulo novoRetangulo = new Retangulo(x1, y1, largura, altura, p1.Cor, espessura); // Instancia um novo retângulo, o qual
-                                                                                                 // será adicionado a lista de figuras.
+            Retangulo novoRetangulo = new Retangulo(x1, y1, largura, altura, corAtual, espessura); // Instancia um novo retângulo, o qual
+                                                                                                   // será adicionado a lista de figuras.
 
             // Cria uma nova caixa de edição com o retângulo criado acima:
             caixaDeEdicao = new CaixaDeEdicao(novoRetangulo.X, 
