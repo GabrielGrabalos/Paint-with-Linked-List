@@ -410,7 +410,7 @@
             this.Controls.Add(this.pbAreaDesenho);
             this.Name = "frmGrafico";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "Desenho Gráfico";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             ((System.ComponentModel.ISupportInitialize)(this.pbAreaDesenho)).EndInit();
             this.toolStrip1.ResumeLayout(false);

@@ -17,10 +17,10 @@ namespace InfinityPaint
         bool esperaInicioRetangulo = false;
         bool esperaFimRetangulo    = false;
 
-        bool salvo                 = false; // Verifica se a versão atual do arquivo foi salva.
+        bool salvo = false; // Verifica se a versão atual do arquivo foi salva.
 
         // Variáveis de controle da caixa de edição:
-        bool arrastando       = false;                      // Verifica se a caixa está sendo arrastada.
+        bool arrastando = false;                      // Verifica se a caixa está sendo arrastada.
         string editando =    "";                      // Verifica qual área da caixa está sendo editada.
 
 
@@ -534,10 +534,10 @@ namespace InfinityPaint
                 Reta novaLinha = new Reta(p1.X, p1.Y, p2.X, p2.Y, corAtual, espessura); // Instancia uma nova reta, a qual
                                                                                         // será adicionada a lista de figuras.
 
-                caixaDeEdicao = new CaixaDeEdicao(Math.Min(novaLinha.X,  novaLinha.PontoFinal.X), // Faz uma nova caixa de edição,
-                                                  Math.Min(novaLinha.Y,  novaLinha.PontoFinal.Y), // tomando em base a reta criada acima,
-                                                  Math.Abs(novaLinha.X - novaLinha.PontoFinal.X), // permitindo que o usuário modifique
-                                                  Math.Abs(novaLinha.Y - novaLinha.PontoFinal.Y), // a figura, dando-lhe mais mobilidade.
+                caixaDeEdicao = new CaixaDeEdicao(novaLinha.X,                          // Faz uma nova caixa de edição,
+                                                  novaLinha.Y,                          // tomando em base a reta criada acima,
+                                                  novaLinha.PontoFinal.X - novaLinha.X, // permitindo que o usuário modifique
+                                                  novaLinha.PontoFinal.Y - novaLinha.Y, // a figura, dando-lhe mais mobilidade.
                                                   novaLinha);
 
                 caixaDeEdicao.desenhar(corAtual, pbAreaDesenho.CreateGraphics()); // Desenha a caixa de edição.

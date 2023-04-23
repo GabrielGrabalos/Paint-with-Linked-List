@@ -1,13 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dhM+q527DrLxqh8ASmZ3tal/xWiQR9yDBAoEv8eLz6ogDLFRgG8i5BTBqJaILa5ex1LtTJXTFZpi5BxD7CX1Xg==",
+  "dgSpecHash": "8o8fYdXEGAmdkdTNZ53l6QsYAQUC/BrFbhrTiUal4A3GTuJHN+vxlh1vv3wSk16NvATrbzfPNEcs/xieyl9bTQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\u22131\\source\\repos\\InfinityPaint\\InfinityPaint.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\u22131\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.16\\microsoft.windowsdesktop.app.ref.6.0.16.nupkg.sha512",
-    "C:\\Users\\u22131\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.16\\microsoft.netcore.app.ref.6.0.16.nupkg.sha512",
-    "C:\\Users\\u22131\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.16\\microsoft.aspnetcore.app.ref.6.0.16.nupkg.sha512",
-    "C:\\Users\\u22131\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.16\\microsoft.netcore.app.host.win-x64.6.0.16.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\Users\\SAMSUNG\\source\\repos\\Paint-com-Lista-Ligada-1\\InfinityPaint.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }
