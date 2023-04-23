@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmGrafico));
             this.pbAreaDesenho = new System.Windows.Forms.PictureBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.btnNovo = new System.Windows.Forms.ToolStripButton();
             this.btnAbrir = new System.Windows.Forms.ToolStripButton();
             this.btnSalvar = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -76,7 +77,7 @@
             this.pbAreaDesenho.BackColor = System.Drawing.Color.White;
             this.pbAreaDesenho.Location = new System.Drawing.Point(0, 47);
             this.pbAreaDesenho.Name = "pbAreaDesenho";
-            this.pbAreaDesenho.Size = new System.Drawing.Size(800, 378);
+            this.pbAreaDesenho.Size = new System.Drawing.Size(831, 378);
             this.pbAreaDesenho.TabIndex = 0;
             this.pbAreaDesenho.TabStop = false;
             this.pbAreaDesenho.Paint += new System.Windows.Forms.PaintEventHandler(this.pbAreaDesenho_Paint);
@@ -90,6 +91,7 @@
             // 
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(22, 22);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnNovo,
             this.btnAbrir,
             this.btnSalvar,
             this.toolStripSeparator1,
@@ -117,8 +119,18 @@
             this.btnSair});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(800, 44);
+            this.toolStrip1.Size = new System.Drawing.Size(831, 44);
             this.toolStrip1.TabIndex = 1;
+            // 
+            // btnNovo
+            // 
+            this.btnNovo.Image = ((System.Drawing.Image)(resources.GetObject("btnNovo.Image")));
+            this.btnNovo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnNovo.Name = "btnNovo";
+            this.btnNovo.Size = new System.Drawing.Size(40, 41);
+            this.btnNovo.Text = "Novo";
+            this.btnNovo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnNovo.Click += new System.EventHandler(this.btnNovo_Click);
             // 
             // btnAbrir
             // 
@@ -360,7 +372,7 @@
             this.toolStripStatusLabel4});
             this.stMensagem.Location = new System.Drawing.Point(0, 428);
             this.stMensagem.Name = "stMensagem";
-            this.stMensagem.Size = new System.Drawing.Size(800, 22);
+            this.stMensagem.Size = new System.Drawing.Size(831, 22);
             this.stMensagem.TabIndex = 2;
             this.stMensagem.Text = "statusStrip1";
             // 
@@ -404,7 +416,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(831, 450);
             this.Controls.Add(this.stMensagem);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.pbAreaDesenho);
@@ -458,5 +470,6 @@
         private ToolStripButton btnDesfazer;
         private ToolStripButton btnRefazer;
         private ToolStripSeparator toolStripSeparator5;
+        private ToolStripButton btnNovo;
     }
 }

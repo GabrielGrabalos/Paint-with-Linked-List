@@ -52,6 +52,23 @@ namespace InfinityPaint
 
         // ------------------- ↓ Eventos click (em ordem de aparição) ↓ ------------------- //
 
+        // Novo:
+        private void btnNovo_Click(object sender, EventArgs e)
+        {
+            if (!salvo)
+            {
+                DialogResult dialogResult = MessageBox.Show("Deseja salvar o desenho atual antes de começar um novo?", "Salvar", MessageBoxButtons.YesNoCancel);
+
+                if (dialogResult == DialogResult.Yes)
+                    SalvarArquivo();
+                else if (dialogResult == DialogResult.Cancel)
+                    return;
+            }
+
+            ResetarDesenho();
+            pbAreaDesenho.Invalidate();
+        }
+
         // Abrir:
         private void btnAbrir_Click(object sender, EventArgs e)
         {
@@ -698,6 +715,24 @@ namespace InfinityPaint
 
         // --------------------------------------------------------------- //
 
+        // Reseta o desenho, deixando o programa em seu estado original:
+        private void ResetarDesenho()
+        {
+            figuras.Limpar(); // Limpa a lista de figuras.
+            figurasDesfeitas.Limpar(); // Limpa a lista de figuras desfeitas.
+
+            limparEsperas();
+
+            btnDesfazer.Enabled = btnRefazer.Enabled = false;
+
+            if (btnAtivado != null)
+                btnAtivado.BackColor = SystemColors.Control;
+
+            salvo = true;
+
+            this.Text = "Gráfico";
+        }
+
         // Desfaz a última figura desenhada pelo usuário:
         private void Desfazer()
         {
@@ -850,19 +885,14 @@ namespace InfinityPaint
         private void LerArquivo()
         {
             // Caso o esboço atual não esteja salvo, pergunta se o usuário deseja continuar o desenho atual:
-            if (!salvo && !MessageBox.Show(
+            if (!figuras.EstaVazia && !salvo && !MessageBox.Show(
                     "O desenho atual não foi salvo. Deseja continuar este desenho?", "Abrir desenho",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question).Equals(DialogResult.Yes))
                 return;
 
             try
             {
-                figuras.Limpar(); // Limpa a lista de figuras.
-                figurasDesfeitas.Limpar(); // Limpa a lista de figuras desfeitas.
-
-                limparEsperas();
-
-                btnDesfazer.Enabled = btnRefazer.Enabled = false;
+                ResetarDesenho();
 
                 StreamReader arqFiguras = new StreamReader(dlgAbrir.FileName);
 
@@ -954,7 +984,7 @@ namespace InfinityPaint
                             Polilinha poli = new Polilinha(0, 0, cor, esp);
                             poli.adicionarPonto(new Ponto(xBase, yBase, cor, esp));
 
-                            for (int i = 0; i < numPontos; i++)
+                            for (int i = 0; i < numPontos - 1; i++)
                             {
                                 if ((linha = arqFiguras.ReadLine()) == null) break;
 
@@ -977,8 +1007,6 @@ namespace InfinityPaint
                             break;
                     }
                 }
-
-                salvo = true;
 
                 arqFiguras.Close();
                 this.Text = dlgAbrir.FileName;
