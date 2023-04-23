@@ -32,14 +32,13 @@ namespace InfinityPaint
         {
             figuraInterna?.desenhar(figuraInterna.Cor, g);
 
-            // Draws squares in the corners
+            // Desenha os quadrados nos cantos:
             g.FillRectangle(new SolidBrush(Cor), X - 2, Y - 2, 5, 5);
-
             g.FillRectangle(new SolidBrush(Cor), X + Largura - 2, Y - 2, 5, 5);
             g.FillRectangle(new SolidBrush(Cor), X - 2, Y + Altura - 2, 5, 5);
             g.FillRectangle(new SolidBrush(Cor), X + Largura - 2, Y + Altura - 2, 5, 5);
 
-            // Draws squares in the middle
+            // Desenha os quadrados nos centros:
             g.FillRectangle(new SolidBrush(Cor), X + Largura / 2 - 2, Y - 2, 5, 5);
             g.FillRectangle(new SolidBrush(Cor), X + Largura / 2 - 2, Y + Altura - 2, 5, 5);
             g.FillRectangle(new SolidBrush(Cor), X - 2, Y + Altura / 2 - 2, 5, 5);
@@ -50,39 +49,39 @@ namespace InfinityPaint
         {
             const int interval = 4;
 
-            // Top middle
+            // Centro do topo
             if (x >= X + Largura / 2 - interval && x <= X + Largura / 2 + interval && y >= Y - interval && y <= Y + interval)
                 return "N";
 
-            // Middle left
+            // Centro da esquerda
             if (x >= X - interval && x <= X + interval && y >= Y + Altura / 2 - interval && y <= Y + Altura / 2 + interval)
                 return "W";
 
-            // Middle right
+            // Centro direita
             if (x >= X + Largura - interval && x <= X + Largura + interval && y >= Y + Altura / 2 - interval && y <= Y + Altura / 2 + interval)
                 return "E";
 
-            // Bottom middle
+            // Centro base
             if (x >= X + Largura / 2 - 2 && x <= X + Largura / 2 + 2 && y >= Y + Altura - 2 && y <= Y + Altura + 2)
                 return "S";
 
-            // Top left corner
+            // Topo esquerda
             if (x >= X - interval && x <= X + interval && y >= Y - interval && y <= Y + interval)
                 return "NW";
 
-            // Top right corner
+            // Topo direita
             if (x >= X + Largura - interval && x <= X + Largura + interval && y >= Y - interval && y <= Y + interval)
                 return "NE";
 
-            // Bottom left corner
+            // Base esquerda
             if (x >= X - interval && x <= X + interval && y >= Y + Altura - interval && y <= Y + Altura + interval)
                 return "SW";
 
-            // Bottom right corner
+            // Base direita
             if (x >= X + Largura - 2 && x <= X + Largura + 2 && y >= Y + Altura - 2 && y <= Y + Altura + 2)
                 return "SE";
 
-            // Middle
+            // Centro
             if (Altura > 0 && Largura > 0)
                 if (x >= X && x <= X + Largura && y >= Y && y <= Y + Altura)
                     return "C";
@@ -96,11 +95,12 @@ namespace InfinityPaint
                 if (x <= X && x >= X + Largura && y <= Y && y >= Y + Altura)
                     return "C";
 
-            return "";
+            return ""; // Mouse não está por cima da caixa de edição.
         }
 
         public void Mover(string direction, int mouseX, int mouseY)
         {
+            // Atualiza a caixa de edição:
             switch (direction)
             {
                 case "NW":

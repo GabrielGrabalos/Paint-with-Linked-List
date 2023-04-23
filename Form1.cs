@@ -355,6 +355,8 @@ namespace InfinityPaint
                 if (!btnDesfazer.Enabled)       // Caso o botão de desfazer esteja desabilitado,
                                                 // o habilita, para possível remoção da nova figura.
                     btnDesfazer.Enabled = true;
+
+                stMensagem.Items[1].Text = "Sem mensagem"; // Reseta a mensagem.
             }
         }
 
@@ -439,8 +441,7 @@ namespace InfinityPaint
 
                 btnAtual.BackColor = SystemColors.ButtonShadow; // Exibe o botão como selecionado.
 
-                stMensagem.Items[1].Text = "Sem mensagem";      // Reseta a mensagem.
-
+                stMensagem.Items[1].Text = mensagem;            // Atribui a mensagem passada por parâmetro.
 
                 // Exibe o antigo botão selecionado com não selecionado:
                 if (btnAtivado != null)
@@ -457,7 +458,7 @@ namespace InfinityPaint
 
                 btnAtual.BackColor = SystemColors.Control; // Exibe o botão como não selecionado.
 
-                stMensagem.Items[1].Text = mensagem;       // Reseta a mensagem
+                stMensagem.Items[1].Text = "Sem mensagem"; // Reseta a mensagem.
                 btnAtivado = null;
             }
 
@@ -467,6 +468,11 @@ namespace InfinityPaint
             {
                 ConfirmarCaixaDeEdicao();
             }
+        }
+
+        private void MsgCaixaDeEdicao()
+        {
+            stMensagem.Items[1].Text = "Clique fora da área da caixa de edição para confirmar a figura";
         }
 
         // ------------------- ↓ Esperas das figuras ↓ ------------------- //
@@ -509,7 +515,10 @@ namespace InfinityPaint
             if (!figurasDesfeitas.EstaVazia) ResetarFigurasDesfeitas(); // Se há coisas que foram desefeitas na memória, as apaga,
                                                                         // visto que não serão mais utilizadas pelo usuário
 
-            stMensagem.Items[1].Text = "Mensagem: clique o ponto final da reta"; // Atualiza a mensagem.
+            if (umaPolilinha == null)
+                stMensagem.Items[1].Text = "Mensagem: clique no ponto final da reta"; // Atualiza a mensagem.
+            else
+                stMensagem.Items[1].Text = "Mensagem: clique no ponto final da reta (duplo clique para finalizar)"; // Atualiza a mensagem.
         }
 
         private void EsperaFimReta()
@@ -545,6 +554,8 @@ namespace InfinityPaint
                 btnAtivado.BackColor = SystemColors.Control;                      // Mostra o botão ativado com desselecionado.
 
                 if (!btnDesfazer.Enabled) btnDesfazer.Enabled = true;             // Permite a remoção da figura, caso desejada.
+
+                MsgCaixaDeEdicao(); // Coloca a mensagem da caixa de edição.
             }
         }
 
@@ -560,7 +571,7 @@ namespace InfinityPaint
             if (!figurasDesfeitas.EstaVazia) ResetarFigurasDesfeitas(); // Se há coisas que foram desefeitas na memória, as apaga,
                                                                         // visto que não serão mais utilizadas pelo usuário
 
-            stMensagem.Items[1].Text = "Mensagem: clique o ponto final do círculo"; // Atualiza a mensagem.
+            stMensagem.Items[1].Text = "Mensagem: clique no ponto final do círculo"; // Atualiza a mensagem.
         }
 
         private void EsperaFimCirculo()
@@ -581,6 +592,8 @@ namespace InfinityPaint
                                               novoCirculo);
 
             caixaDeEdicao.desenhar(corAtual, pbAreaDesenho.CreateGraphics()); // Desenha a caixa de edição.
+
+            MsgCaixaDeEdicao(); // Coloca a mensagem da caixa de edição.
         }
 
         private void EsperaInicioElipse()
@@ -595,7 +608,7 @@ namespace InfinityPaint
             if (!figurasDesfeitas.EstaVazia) ResetarFigurasDesfeitas(); // Se há coisas que foram desefeitas na memória, as apaga,
                                                                         // visto que não serão mais utilizadas pelo usuário
 
-            stMensagem.Items[1].Text = "Mensagem: clique o ponto final da elipse"; // Atualiza a mensagem.
+            stMensagem.Items[1].Text = "Mensagem: clique no ponto final da elipse"; // Atualiza a mensagem.
         }
 
         private void EsperaFimElipse()
@@ -617,6 +630,8 @@ namespace InfinityPaint
                                               novaElipse);
 
             caixaDeEdicao.desenhar(corAtual, pbAreaDesenho.CreateGraphics()); // Desenha a caixa de edição.
+
+            MsgCaixaDeEdicao(); // Coloca a mensagem da caixa de edição.
         }
 
         private void EsperaInicioRetangulo()
@@ -631,7 +646,7 @@ namespace InfinityPaint
             if (!figurasDesfeitas.EstaVazia) ResetarFigurasDesfeitas(); // Se há coisas que foram desefeitas na memória, as apaga,
                                                                         // visto que não serão mais utilizadas pelo usuário
 
-            stMensagem.Items[1].Text = "Mensagem: clique o ponto final do retângulo"; // Atualiza a mensagem.
+            stMensagem.Items[1].Text = "Mensagem: clique no ponto final do retângulo"; // Atualiza a mensagem.
         }
 
         private void EsperaFimRetangulo()
@@ -677,6 +692,8 @@ namespace InfinityPaint
                                               novoRetangulo);
 
             caixaDeEdicao.desenhar(corAtual, pbAreaDesenho.CreateGraphics()); // Desenha a caixa de edição.
+
+            MsgCaixaDeEdicao(); // Coloca a mensagem da caixa de edição.
         }
 
         // --------------------------------------------------------------- //
@@ -752,6 +769,8 @@ namespace InfinityPaint
             }
 
             pbAreaDesenho.Invalidate(); // Atualiza a tela.
+
+            stMensagem.Items[1].Text = "Sem mensagem";
         }
 
         private void DesenharFiguras(Graphics g)
@@ -839,6 +858,11 @@ namespace InfinityPaint
             try
             {
                 figuras.Limpar(); // Limpa a lista de figuras.
+                figurasDesfeitas.Limpar(); // Limpa a lista de figuras desfeitas.
+
+                limparEsperas();
+
+                btnDesfazer.Enabled = btnRefazer.Enabled = false;
 
                 StreamReader arqFiguras = new StreamReader(dlgAbrir.FileName);
 

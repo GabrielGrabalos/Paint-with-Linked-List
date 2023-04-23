@@ -1,6 +1,6 @@
 ﻿class Polilinha : Ponto
 {
-    ListaSimples<Ponto> pontos;
+    ListaSimples<Ponto> pontos; // Armazena os pontos da polilinha em sequência.
 
     int NumPontos { get => pontos.QuantosNos(); }
 
@@ -27,6 +27,7 @@
         {
             pen.Width = lista[i].Espessura;
             pen.Color = lista[i].Cor;
+
             g.DrawLine(pen, lista[i - 1].X, lista[i - 1].Y, lista[i].X, lista[i].Y);
         }
     }
@@ -44,6 +45,8 @@
         {
             var pontoAtual = lista[i];
 
+            // Caso seja o primeiro ponto da lista, o salva junto à
+            // quantidade de pontos que há na lista para futuras leituras:
             if(i == 0)
             {
                 ret += transformaString("i", 5) +
@@ -67,7 +70,7 @@
                        "          " +
                        transformaString(pontoAtual.Espessura, 5);
 
-                if (i != lista.Count - 1)
+                if (i != lista.Count - 1) // Impede que uma linha vazia seja escrita.
                     ret += "\n";
             }
         }
